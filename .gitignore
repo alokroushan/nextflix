@@ -30,6 +30,7 @@ uploads/preview-*.jpg
 *.mp4
 *.mkv
 *.webm
+!public/images/*.mp4
 
 # OS and Editor metadata
 .DS_Store

@@ -22,7 +22,39 @@ const AVATAR_OPTIONS=[
   {name:'Garden of Words',src:'/images/garden-of-words.jpg'}
 ];
 
-const J=(k,d)=>JSON.parse(localStorage.getItem(profileStoreKey(k))||d);
+function activeUserKey(){
+  try{
+    const u=JSON.parse(localStorage.getItem('nextflix_user')||'null');
+    const id=u?.account||u?.email||u?.username||'guest';
+    return String(id).toLowerCase().trim().replace(/[^a-z0-9_.-]/g,'_');
+  }catch{
+    return 'guest';
+  }
+}
+const profileStoreKey=k=>`nx:${activeUserKey()}:${activeProfile||'me'}:${k}`;
+const J=(k,d)=>{
+  const sk=profileStoreKey(k);
+  const val=localStorage.getItem(sk);
+  if(val!==null){
+    try{return JSON.parse(val)}catch{return JSON.parse(d)}
+  }
+  const legacyVal=localStorage.getItem(`${k}:${activeProfile||'guest'}`);
+  if(legacyVal!==null){
+    try{
+      const parsed=JSON.parse(legacyVal);
+      localStorage.setItem(sk,legacyVal);
+      return parsed;
+    }catch{}
+  }
+  return JSON.parse(d);
+};
+function saveProgress(videoId, currentTime, duration){
+  if(!videoId||currentTime<=0)return;
+  const p=prog();
+  const d=Math.max(duration||1440,currentTime+10);
+  p[videoId]={t:currentTime,d:d,updated:Date.now()};
+  localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p));
+}
 
 let profiles=[];
 try{
@@ -86,7 +118,7 @@ function openProfileDialog(title,value,action,type='text'){
 $('#profileDialogCancel').onclick=()=>{$('#profileDialog').hidden=true;profileDialogAction=null};
 $('#profileDialogSave').onclick=()=>{const value=$('#profileDialogInput').value.trim();if(profileDialogAction)profileDialogAction(value);$('#profileDialog').hidden=true;profileDialogAction=null};
 
-const profileStoreKey=k=>`${k}:${activeProfile||'guest'}`;
+
 const prog=()=>J('prog','{}'), mylist=()=>J('mylist','[]');
 const activeAudience=()=>profiles.find(p=>p.id===activeProfile)?.audience||'For Adults';
 const activeAge=()=>activeAudience()==='For Kids'?'kids':activeAudience()==='For Teens'?'teens':'adults';
@@ -370,7 +402,12 @@ $('#tools').onclick=e=>{const button=e.target.closest('[data-skip]');if(button)v
 $('#speed').onchange=e=>{vid.playbackRate=Number(e.target.value)};
 function card(v,i,removeProgress=false){
   const displayTitle=v.series||v.title, episodeText=(v.series && v.episodes)?`${v.episodes.length} episode${v.episodes.length===1?'':'s'}`:'';
-  const p=prog()[v.id], pct=p&&p.d?Math.min(100,p.t/p.d*100):0, inList=mylist().includes(v.id);
+  let p=prog()[v.id];
+  if(!p&&v.episodes){
+    const watchedEp=v.episodes.find(e=>prog()[e.id]);
+    if(watchedEp)p=prog()[watchedEp.id];
+  }
+  const pct=p&&p.d?Math.min(100,p.t/p.d*100):0, inList=mylist().includes(v.id);
   const body=`<div class="th" style="${poster(v)?`background-image:url(${poster(v)})`:''}">${!poster(v)&&videoSource(v)&&!isYoutube(v)?`<video src="${videoSource(v)}#t=2" muted preload="metadata"></video>`:''}${pct>2?`<i style="width:${pct}%"></i>`:''}<em>${esc(displayTitle)}</em></div>
     <div class="inf"><div class="ib"><span data-id="${v.id}" title="Play">▶</span><span data-add="${v.id}" title="My List">${inList?'✓':'+'}</span><span data-info="${v.id}" title="More info" style="margin-left:auto">⌄</span></div>
     ${removeProgress?`<button class="remove-progress" data-remove-progress="${v.id}" title="Remove from Continue Watching" aria-label="Remove ${esc(displayTitle)} from Continue Watching">× Remove</button>`:''}<b>${90+v.id%9}% Match</b> <small>${v.year||''} · HD</small><br><small>${esc(v.category)} · ${episodeText||v.views+' views'}</small></div>`;
@@ -406,7 +443,18 @@ function render(){
 }
 $('#main').addEventListener('click',e=>{
   const remove=e.target.closest('[data-remove-progress]');
-  if(remove){const p=prog();delete p[remove.dataset.removeProgress];localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p));render();return}
+  if(remove){
+    const p=prog();
+    const rid=remove.dataset.removeProgress;
+    delete p[rid];
+    const v=videos.find(x=>x.id==rid);
+    if(v&&v.series){
+      videos.filter(x=>x.series===v.series).forEach(x=>delete p[x.id]);
+    }
+    localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p));
+    render();
+    return;
+  }
   const s=e.target.closest('[data-s]');
   if(s){const t=s.parentElement.querySelector('.track');t.scrollBy({left:s.dataset.s*t.clientWidth*.9});return}
   if(e.target.closest('#mt')){
@@ -436,14 +484,61 @@ $('#main').addEventListener('click',e=>{
 function toggle(id){const l=mylist(),i=l.indexOf(id);i<0?l.push(id):l.splice(i,1);localStorage.setItem(profileStoreKey('mylist'),JSON.stringify(l));render()}
 // hover preview: after a short delay the card plays a muted clip
 let hv;
-$('#main').addEventListener('mouseover',e=>{const c=e.target.closest('.card');if(!c||c.dataset.p)return;
-  hv=setTimeout(()=>{const v=videos.find(x=>x.id==c.dataset.id),th=c.querySelector('.th');if(!v||!th||!c.matches(':hover'))return;
-    c.dataset.p=1;const el=document.createElement('video');el.src=videoSource(v);el.muted=true;el.autoplay=true;el.loop=true;th.prepend(el)},700)});
-$('#main').addEventListener('mouseout',e=>{const c=e.target.closest('.card');if(!c||c.contains(e.relatedTarget))return;clearTimeout(hv);
-  const el=c.querySelector('.th video');if(el){el.remove();delete c.dataset.p}});
+$('#main').addEventListener('mouseover',e=>{
+  const c=e.target.closest('.card');
+  if(!c||c.dataset.p)return;
+  hv=setTimeout(()=>{
+    const v=videos.find(x=>x.id==c.dataset.id),th=c.querySelector('.th');
+    if(!v||!th||!c.matches(':hover'))return;
+    c.dataset.p='1';
+    if(isYoutube(v)){
+      const yt=youtubeId(v.video_url||'');
+      const ytList=youtubePlaylistId(v.video_url||'');
+      let src='';
+      if(yt&&ytList){
+        src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?list=${encodeURIComponent(ytList)}&autoplay=1&mute=1&controls=0&loop=1&playlist=${encodeURIComponent(yt)}&playsinline=1&modestbranding=1&rel=0`;
+      }else if(yt){
+        src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&mute=1&controls=0&loop=1&playlist=${encodeURIComponent(yt)}&playsinline=1&modestbranding=1&rel=0`;
+      }else if(ytList){
+        src=`https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(ytList)}&autoplay=1&mute=1&controls=0&loop=1&playsinline=1&modestbranding=1&rel=0`;
+      }
+      if(src){
+        const el=document.createElement('iframe');
+        el.className='hover-preview-frame';
+        el.src=src;
+        el.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        el.setAttribute('frameborder','0');
+        th.prepend(el);
+      }
+    }else{
+      const src=videoSource(v);
+      if(src){
+        const el=document.createElement('video');
+        el.className='hover-preview-video';
+        el.src=src;
+        el.muted=true;
+        el.autoplay=true;
+        el.loop=true;
+        el.playsInline=true;
+        th.prepend(el);
+      }
+    }
+  },500);
+});
+$('#main').addEventListener('mouseout',e=>{
+  const c=e.target.closest('.card');
+  if(!c||c.contains(e.relatedTarget))return;
+  clearTimeout(hv);
+  const el=c.querySelector('.th video, .th iframe.hover-preview-frame');
+  if(el){
+    if(el.tagName==='VIDEO')el.pause();
+    el.remove();
+    delete c.dataset.p;
+  }
+});
 
 // Player controls and playback progress.
-const vid=$('#vid'); let cur=null,last=0;
+const vid=$('#vid'); let cur=null,last=0,ytWatchInterval=null;
 function play(id,infoOnly){
   cur=videos.find(v=>v.id===id); if(!cur)return;
   stopPlayback();
@@ -456,14 +551,18 @@ function play(id,infoOnly){
   const yt=youtubeId(cur.video_url||'');
   const ytList=youtubePlaylistId(cur.video_url||'');
   const isYt=Boolean(yt||ytList);
+  const p=prog()[id];
+  const startSec=(p&&p.t>5)?Math.floor(p.t):0;
+  const startParam=startSec>0?`&start=${startSec}`:'';
+
   $('#pic').style.display='none';$('#doc').style.display='none';$('#yt').style.display=isYt?'block':'none';$('#tools').style.display=isYt?'none':'flex';vid.style.display=isYt?'none':'block';vid.muted=false;
   if(!isYt){vid.src=videoSource(cur);vid.poster=poster(cur)}
   if(yt && ytList){
-    $('#yt').src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?list=${encodeURIComponent(ytList)}&autoplay=1&controls=1&rel=0&playsinline=1`;
+    $('#yt').src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?list=${encodeURIComponent(ytList)}&autoplay=1&controls=1&rel=0&playsinline=1&enablejsapi=1${startParam}`;
   }else if(yt){
-    $('#yt').src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&controls=1&rel=0&playsinline=1`;
+    $('#yt').src=`https://www.youtube.com/embed/${encodeURIComponent(yt)}?autoplay=1&controls=1&rel=0&playsinline=1&enablejsapi=1${startParam}`;
   }else if(ytList){
-    $('#yt').src=`https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(ytList)}&autoplay=1&controls=1&rel=0&playsinline=1`;
+    $('#yt').src=`https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(ytList)}&autoplay=1&controls=1&rel=0&playsinline=1&enablejsapi=1`;
   }
   $('#trailer').style.display=cur.trailer_url?'inline-flex':'none';$('#trailer').href=cur.trailer_url||'#';
   const ytDirect=$('#ytDirect');
@@ -476,19 +575,56 @@ function play(id,infoOnly){
       ytDirect.style.display='none';
     }
   }
-  const p=prog()[id]; vid.onloadedmetadata=()=>{if(p&&p.t<vid.duration-5)vid.currentTime=p.t};
+  vid.onloadedmetadata=()=>{if(p&&p.t<vid.duration-5)vid.currentTime=p.t};
   $('#modal').classList.add('on'); $('#modal').scrollTop=0;
   if(!isYt)vid.play().catch(()=>{}); fetch(`/api/videos/${id}/view`,{method:'POST'});
+
+  if(isYt){
+    if(ytWatchInterval)clearInterval(ytWatchInterval);
+    let elapsed=startSec;
+    const defDur=(cur.category==='Anime'||cur.series)?1440:7200;
+    let dur=(p&&p.d)?p.d:defDur;
+    ytWatchInterval=setInterval(()=>{
+      if(!cur||!$('#modal').classList.contains('on')){
+        clearInterval(ytWatchInterval);
+        return;
+      }
+      elapsed+=2;
+      if(elapsed>5){
+        saveProgress(cur.id,elapsed,dur);
+      }
+    },2000);
+  }
 }
-vid.ontimeupdate=()=>{if(!cur||Date.now()-last<2000)return;last=Date.now();
-  const p=prog();p[cur.id]={t:vid.currentTime,d:vid.duration};localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p))};
+window.addEventListener('message',e=>{
+  if(!cur||!isYoutube(cur))return;
+  try{
+    const data=typeof e.data==='string'?JSON.parse(e.data):e.data;
+    if(data&&data.event==='infoDelivery'&&data.info){
+      const info=data.info;
+      if(typeof info.currentTime==='number'&&info.currentTime>0){
+        const curT=info.currentTime;
+        const curD=typeof info.duration==='number'&&info.duration>0?info.duration:(cur.category==='Anime'?1440:7200);
+        saveProgress(cur.id,curT,curD);
+      }
+    }
+  }catch{}
+});
+vid.ontimeupdate=()=>{
+  if(!cur||isYoutube(cur)||Date.now()-last<2000)return;
+  last=Date.now();
+  if(vid.currentTime>5&&vid.duration>0){
+    saveProgress(cur.id,vid.currentTime,vid.duration);
+  }
+};
 function stopPlayback(){
+  if(ytWatchInterval){clearInterval(ytWatchInterval);ytWatchInterval=null;}
   [vid,$('#aud')].forEach(el=>{el.pause();el.removeAttribute('src');el.load()});
   $('#yt').removeAttribute('src');
-  document.querySelectorAll('.th video').forEach(el=>{el.pause();el.remove()});
+  document.querySelectorAll('.th video, .th iframe.hover-preview-frame').forEach(el=>{if(el.tagName==='VIDEO')el.pause();el.remove()});
   document.querySelectorAll('.card[data-p]').forEach(el=>delete el.dataset.p);
 }
-function closePlayer(){stopPlayback();$('#pic').removeAttribute('src');$('#doc').removeAttribute('src');$('#modal').classList.remove('on');cur=null;load()}
+function closePlayer(){stopPlayback();$('#pic').removeAttribute('src');$('#doc').removeAttribute('src');$('#modal').classList.remove('on');cur=null;render()}
 $('#folderUp').onsubmit=async e=>{e.preventDefault();const form=e.target,msg=$('#fmsg'),fd=new FormData(form);const r=await fetch('/api/import-folder',{method:'POST',headers:{'x-token':token},body:fd});const d=await r.json();if(!r.ok){msg.textContent=d.error||'Could not import folder';return}msg.textContent=`Imported ${d.imported} item${d.imported===1?'':'s'}.`;form.reset();form.recursive.checked=true;load()};
 $('#close').onclick=closePlayer;
 $('#modal').onclick=e=>{if(e.target.id==='modal')closePlayer()};

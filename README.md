@@ -103,16 +103,14 @@ Visit **`http://localhost:3000`** in your browser.
 
 ---
 
-## ☁️ Deployment Guide: Render vs. Vercel
+## ☁️ Deployment Guide: Render
 
-### 🥇 Render (Recommended & Out-of-the-Box Ready)
-**Render is the ideal platform for NEXTFLIX.** 
-Because NEXTFLIX uses a Node.js Express server with HTTP Range requests, file streaming, and a local SQLite database (`better-sqlite3`), a persistent Web Service on Render runs flawlessly:
+Render provides out-of-the-box support for persistent Node.js Web Services, SQLite database persistence, and HTTP Range streaming:
 
 1. Create a free account at [render.com](https://render.com).
 2. Click **New +** > **Web Service**.
 3. Connect your GitHub repository: `https://github.com/alokroushan/nextflix`.
-4. Configure the settings:
+4. Configure the service:
    - **Environment**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `node server.js`
@@ -120,16 +118,6 @@ Because NEXTFLIX uses a Node.js Express server with HTTP Range requests, file st
 5. Click **Create Web Service**. Your streaming platform will be live in minutes!
 
 *(Alternatively, use the included [`render.yaml`](render.yaml) for automated Blueprint deployment).*
-
----
-
-### ⚠️ Can I host on Vercel?
-**Yes, but with architectural adjustments:**
-- **Vercel's Architecture**: Vercel is designed for serverless functions and static frontends with ephemeral filesystems (read-only after deployment).
-- **Considerations for Vercel**:
-  1. *Database*: Local SQLite files are reset on every serverless cold start. To run on Vercel, replace local SQLite with a hosted cloud database like [Turso](https://turso.tech), [Supabase](https://supabase.com), or [Neon](https://neon.tech).
-  2. *Video Uploads*: Vercel serverless functions have a 4.5MB request payload limit. Video uploads must be routed directly to cloud storage (e.g., AWS S3, Cloudinary, or UploadThing).
-- **Verdict**: For instant deployment without rewriting database drivers or cloud storage layers, **Render** (or Railway / Fly.io) is recommended.
 
 ---
 
