@@ -30,6 +30,14 @@ function seed(database) {
     }
   }
 
+  // Ensure default admin password matches ADMIN_PASSWORD or admin123
+  db.exec('CREATE TABLE IF NOT EXISTS app_settings(key TEXT PRIMARY KEY, value TEXT NOT NULL)');
+  const crypto = require('crypto');
+  const envPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(envPassword, salt, 64).toString('hex');
+  db.prepare("INSERT INTO app_settings(key, value) VALUES('admin_password', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(`${salt}:${hash}`);
+
   // Remove titles that only had trailers or broken playlists
   const removedTitles = [
     'Death Note',
