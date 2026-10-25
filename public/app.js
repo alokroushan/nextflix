@@ -355,7 +355,7 @@ $('#episodes').onclick=e=>{const button=e.target.closest('[data-episode]');if(bu
 $('#tools').onclick=e=>{const button=e.target.closest('[data-skip]');if(button)vid.currentTime=Math.max(0,vid.currentTime+Number(button.dataset.skip))};
 $('#speed').onchange=e=>{vid.playbackRate=Number(e.target.value)};
 function card(v,i,removeProgress=false){
-  const displayTitle=v.series||v.title, episodeText=v.series?`${v.episodes.length} episode${v.episodes.length===1?'':'s'}`:'';
+  const displayTitle=v.series||v.title, episodeText=(v.series && v.episodes)?`${v.episodes.length} episode${v.episodes.length===1?'':'s'}`:'';
   const p=prog()[v.id], pct=p&&p.d?Math.min(100,p.t/p.d*100):0, inList=mylist().includes(v.id);
   const body=`<div class="th" style="${poster(v)?`background-image:url(${poster(v)})`:''}">${!poster(v)&&videoSource(v)&&!isYoutube(v)?`<video src="${videoSource(v)}#t=2" muted preload="metadata"></video>`:''}${pct>2?`<i style="width:${pct}%"></i>`:''}<em>${esc(displayTitle)}</em></div>
     <div class="inf"><div class="ib"><span data-id="${v.id}" title="Play">▶</span><span data-add="${v.id}" title="My List">${inList?'✓':'+'}</span><span data-info="${v.id}" title="More info" style="margin-left:auto">⌄</span></div>

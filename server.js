@@ -55,7 +55,12 @@ for (const column of ['series', 'episode']) {
   }
 }
 
-try { require('./seed.js'); } catch (e) { console.warn('Database seed notice:', e.message); }
+try {
+  const seed = require('./seed.js');
+  if (typeof seed === 'function') seed(db);
+} catch (e) {
+  console.warn('Database seed notice:', e.message);
+}
 
 const VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mkv', '.mov', '.avi', '.m4v', '.mpeg', '.mpg', '.ogv']);
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.svg']);
@@ -108,18 +113,20 @@ const createPoster = file => {
 };
 const discoverUploads = () => {
   db.prepare("UPDATE videos SET category = 'New Releases' WHERE category = 'General'").run();
-  const missingFiles = db.prepare("SELECT id, file, poster FROM videos WHERE file != ''").all()
+  const missingFiles = db.prepare("SELECT id, file, poster FROM videos WHERE file != '' AND (video_url IS NULL OR TRIM(video_url) = '')").all()
     .filter(video => !fs.existsSync(path.join(UP, video.file)));
   const removeMissing = db.transaction(() => {
     for (const video of missingFiles) {
       const posterInUse = video.poster && db.prepare(
         'SELECT 1 FROM videos WHERE poster = ? AND id != ?').get(video.poster, video.id);
       db.prepare('DELETE FROM videos WHERE id = ?').run(video.id);
-      if (video.poster && !posterInUse) fs.rmSync(path.join(UP, video.poster), { force: true });
+      if (video.poster && !posterInUse && fs.existsSync(path.join(UP, video.poster))) {
+        fs.rmSync(path.join(UP, video.poster), { force: true });
+      }
     }
   });
   removeMissing();
-  const known = new Set(db.prepare('SELECT file FROM videos').all().map(v => v.file));
+  const known = new Set(db.prepare('SELECT file FROM videos').all().map(v => v.file).filter(Boolean));
   const collect = (directory, series) => {
     const entries = fs.readdirSync(directory, { withFileTypes: true });
     return entries.flatMap(entry => {
@@ -154,11 +161,13 @@ const discoverUploads = () => {
     }
   });
   add();
-  const missing = db.prepare('SELECT id, file FROM videos WHERE poster IS NULL').all();
+  const missing = db.prepare("SELECT id, file FROM videos WHERE poster IS NULL AND file != ''").all();
   const updatePoster = db.prepare('UPDATE videos SET poster = ? WHERE id = ?');
   for (const video of missing) {
-    const poster = createPoster(video.file);
-    if (poster) updatePoster.run(poster, video.id);
+    if (fs.existsSync(path.join(UP, video.file))) {
+      const poster = createPoster(video.file);
+      if (poster) updatePoster.run(poster, video.id);
+    }
   }
 };
 discoverUploads();
