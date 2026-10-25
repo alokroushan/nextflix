@@ -18,7 +18,7 @@
       <a href="index.html" class="signup-logo-link" aria-label="NEXTFLIX Home">
         <img src="images/nextflix-logo.png" alt="NEXTFLIX" class="signup-logo-img" />
       </a>
-      <a href="/browse" class="signup-browse-link" id="signupBrowseLink" title="Jump straight to NEXTFLIX">Start Watching &rarr;</a>
+      <a href="index.html" class="signup-browse-link" id="signupBrowseLink" title="Back to Home">Home</a>
     </div>
   </header>
 
@@ -190,7 +190,7 @@
 
       const browseLink = document.getElementById('signupBrowseLink');
       if (browseLink) {
-        browseLink.href = window.location.protocol.startsWith('http') ? '/browse' : 'browse.html';
+        browseLink.href = 'index.html';
       }
     })();
   </script>

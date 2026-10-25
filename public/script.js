@@ -83,16 +83,11 @@ const MOVIES = {
     }
   }
 
-  // Update Sign In button if already logged in
+  // Header Sign In button directs to the sign-in gateway
   const signInBtn = document.getElementById('headerSignInBtn');
   if (signInBtn) {
-    try {
-      const user = JSON.parse(localStorage.getItem('nextflix_user') || 'null');
-      if (user && user.isLoggedIn) {
-        signInBtn.textContent = 'Go to Movies →';
-        signInBtn.href = window.location.protocol.startsWith('http') ? '/browse' : 'browse.html';
-      }
-    } catch (e) {}
+    signInBtn.textContent = 'Sign In';
+    signInBtn.href = 'signup.html?mode=signin';
   }
 
   window.addEventListener('scroll', updateHeader, { passive: true });

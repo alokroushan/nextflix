@@ -26,6 +26,7 @@ uploads/**/*.avi
 uploads/**/*.mov
 uploads/**/*.m4v
 uploads/imported/
+uploads/preview-*.jpg
 *.mp4
 *.mkv
 *.webm

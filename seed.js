@@ -30,8 +30,37 @@ function seed(database) {
     }
   }
 
-  const defaultTitles = [
-    // --- Bollywood & Blockbuster Hits ---
+  // Remove titles that only had trailers or broken playlists
+  const removedTitles = [
+    'Death Note',
+    'Suzume',
+    'Weathering With You',
+    'Your Name (Kimi no Na wa)',
+    'Your Name',
+    'A Silent Voice',
+    'The Silent Voice',
+    'Spirited Away',
+    'Demon Slayer: Kimetsu no Yaiba',
+    'Hyouka',
+    'Campfire Cooking in Another World',
+    'Tokyo Revengers',
+    'SPY x FAMILY',
+    'Anohana   The Flower We Saw That Day',
+    "Doraemon Movie Nobita'S Space Heroes",
+    "Doraemon Movie： Nobita'S New Dinosaur",
+    'Doremon Movie｜Sky Utopia',
+    'Look Back',
+    'Shin Chan: The Spicy Kasukabe Dancers In India',
+    'Spider Man Brand New Day',
+    'Hope'
+  ];
+  for (const t of removedTitles) {
+    db.prepare('DELETE FROM videos WHERE title = ?').run(t);
+  }
+
+  // 100% Full Movies and Official Full Season Anime Playlists only
+  const verifiedTitles = [
+    // --- Bollywood & Blockbuster Cinema (Full Feature Films) ---
     {
       title: 'KGF: Chapter 1',
       description: 'In the 1970s, a fierce rebel rises against brutal oppression at the Kolar Gold Fields, becoming the symbol of hope for thousands of downtrodden workers.',
@@ -59,7 +88,7 @@ function seed(database) {
       featured: 0
     },
 
-    // --- Popular Anime Series & Seasons (Official Muse Asia / Ani-One) ---
+    // --- Official Full Season Anime Playlists (Official Muse India / Muse Asia) ---
     {
       title: 'Attack on Titan (Season 1)',
       series: 'Attack on Titan',
@@ -69,29 +98,14 @@ function seed(database) {
       year: 2013,
       file: '',
       poster: '/images/attack-on-titan.jpg',
-      video_url: 'https://www.youtube.com/watch?v=QjJ4iPOQF_Y&list=PLpm1VVK4UL16H1PewtveOnqL8QIV9F4S9',
-      trailer_url: 'https://www.youtube.com/playlist?list=PLpm1VVK4UL16H1PewtveOnqL8QIV9F4S9',
+      video_url: 'https://www.youtube.com/playlist?list=PLpm1VVK4UL16H1PewtveOnqL8QIV9F4S9',
+      trailer_url: 'https://www.youtube.com/watch?v=MGRm4IzK1SQ',
       views: 52100,
       age_rating: 'teens',
       featured: 0
     },
     {
-      title: 'Death Note',
-      series: 'Death Note',
-      episode: 1,
-      description: 'An intelligent high school student goes on a secret crusade to eliminate criminals worldwide after finding a supernatural notebook capable of killing anyone whose name is written in it.',
-      category: 'Anime',
-      year: 2006,
-      file: '',
-      poster: '/images/death-note.jpg',
-      video_url: 'https://www.youtube.com/playlist?list=PLJsBrksGtG0Y',
-      trailer_url: 'https://www.youtube.com/watch?v=NlJZ-YgAt-c',
-      views: 49800,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'Tokyo Revengers',
+      title: 'Tokyo Revengers (Season 1)',
       series: 'Tokyo Revengers',
       episode: 1,
       description: 'Takemichi Hanagaki travels 12 years back into the past to his middle school days to prevent the death of his ex-girlfriend Hinata by changing the destiny of the Tokyo Manji Gang.',
@@ -99,14 +113,14 @@ function seed(database) {
       year: 2021,
       file: '',
       poster: '/images/tokyo-revengers.jpg',
-      video_url: 'https://www.youtube.com/watch?v=rV9QmUSlPds',
+      video_url: 'https://www.youtube.com/playlist?list=PLpm1VVK4UL14ZN_ayyUTitn2qFsVKMI_9',
       trailer_url: 'https://www.youtube.com/watch?v=rV9QmUSlPds',
-      views: 31200,
+      views: 41200,
       age_rating: 'teens',
       featured: 0
     },
     {
-      title: 'SPY x FAMILY',
+      title: 'SPY x FAMILY (Season 1)',
       series: 'SPY x FAMILY',
       episode: 1,
       description: 'World-class spy Twilight must infiltrate an elite school by building a mock family. But his adopted daughter is a telepath and his fake wife is a deadly assassin.',
@@ -114,14 +128,14 @@ function seed(database) {
       year: 2022,
       file: '',
       poster: '/images/spy-family.jpg',
-      video_url: 'https://www.youtube.com/watch?v=1AQtGDYVs7k',
+      video_url: 'https://www.youtube.com/playlist?list=PLpm1VVK4UL145WmZpHC4VMbgjCAShnb1M',
       trailer_url: 'https://www.youtube.com/watch?v=ofXigq9aIpo',
       views: 64100,
       age_rating: 'kids',
       featured: 0
     },
     {
-      title: 'One-Punch Man',
+      title: 'One-Punch Man (Season 1)',
       series: 'One-Punch Man',
       episode: 1,
       description: 'Saitama is a hero who only became a hero for fun. After three years of relentless training, he has grown so overpowered that he can defeat any enemy with just a single punch.',
@@ -136,7 +150,7 @@ function seed(database) {
       featured: 0
     },
     {
-      title: 'Mob Psycho 100',
+      title: 'Mob Psycho 100 (Season 1)',
       series: 'Mob Psycho 100',
       episode: 1,
       description: 'Eighth-grader Shigeo "Mob" Kageyama possesses godlike psychic power, but wants nothing more than to live a normal peaceful life while keeping his emotional gauge below 100%.',
@@ -150,120 +164,8 @@ function seed(database) {
       age_rating: 'teens',
       featured: 0
     },
-    {
-      title: 'Demon Slayer: Kimetsu no Yaiba',
-      series: 'Demon Slayer',
-      episode: 1,
-      description: 'Tanjiro Kamado embarks on a perilous journey to become a Demon Slayer to avenge his slain family and find a cure for his sister Nezuko, who was transformed into a demon.',
-      category: 'Anime',
-      year: 2019,
-      file: '',
-      poster: '/images/demon-slayer.jpg',
-      video_url: 'https://www.youtube.com/watch?v=VQGCKyvzIM4',
-      trailer_url: 'https://www.youtube.com/watch?v=6vMuWuWlW4I',
-      views: 89400,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'Hyouka',
-      series: 'Hyouka',
-      episode: 1,
-      description: 'Energy-conserving high schooler Hotaro Oreki joins the Classic Literature Club and finds himself solving fascinating school mysteries alongside curious club president Eru Chitanda.',
-      category: 'Anime',
-      year: 2012,
-      file: '',
-      poster: '/images/hyouka.jpg',
-      video_url: 'https://www.youtube.com/watch?v=qM2E46pL8Z0',
-      trailer_url: 'https://www.youtube.com/watch?v=7hR9a8qFjEw',
-      views: 28900,
-      age_rating: 'kids',
-      featured: 0
-    },
-    {
-      title: 'Campfire Cooking in Another World',
-      series: 'Campfire Cooking',
-      episode: 1,
-      description: 'Transported to a fantasy world with only an "Online Grocery" skill, Tsuyoshi Mukoda creates mouthwatering modern dishes that captivate magical creatures and legendary beasts.',
-      category: 'Anime',
-      year: 2023,
-      file: '',
-      poster: '/images/campfire-cooking.jpg',
-      video_url: 'https://www.youtube.com/watch?v=tFvQ0bB-t6o',
-      trailer_url: 'https://www.youtube.com/watch?v=1uR1O9vXGqM',
-      views: 35100,
-      age_rating: 'kids',
-      featured: 0
-    },
 
-    // --- Acclaimed Anime Feature Films ---
-    {
-      title: 'Your Name (Kimi no Na wa)',
-      description: 'Two teenagers share a profound, magical connection upon discovering they are swapping bodies. But things become even more complicated when the boy and girl decide to meet in person.',
-      category: 'Anime',
-      year: 2016,
-      file: '',
-      poster: '/images/your-name.jpg',
-      video_url: 'https://www.youtube.com/watch?v=s0wTdCQoc2k',
-      trailer_url: 'https://www.youtube.com/watch?v=s0wTdCQoc2k',
-      views: 92400,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'Suzume',
-      description: 'A 17-year-old girl named Suzume helps a mysterious young man close mystical doors unleashing devastation across Japan, embarking on an epic journey to save humanity.',
-      category: 'Anime',
-      year: 2022,
-      file: '',
-      poster: '/images/suzume.jpg',
-      video_url: 'https://www.youtube.com/watch?v=5pYFp_5sJ2w',
-      trailer_url: 'https://www.youtube.com/watch?v=5pYFp_5sJ2w',
-      views: 58200,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'A Silent Voice',
-      description: 'A young man is ostracized by his classmates after he bullies a deaf girl to the point she moves away. Years later, he sets off on a journey for redemption to make amends.',
-      category: 'Anime',
-      year: 2016,
-      file: '',
-      poster: '/images/silent-voice.jpg',
-      video_url: 'https://www.youtube.com/watch?v=nfK6UgLra7g',
-      trailer_url: 'https://www.youtube.com/watch?v=nfK6UgLra7g',
-      views: 61300,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'Weathering With You',
-      description: 'A high school boy who runs away to Tokyo befriends an orphaned girl who appears to have the miraculous ability to manipulate the weather and bring sunshine to the city.',
-      category: 'Anime',
-      year: 2019,
-      file: '',
-      poster: '/images/weathering-with-you.jpg',
-      video_url: 'https://www.youtube.com/watch?v=Q6iK6DjV_iE',
-      trailer_url: 'https://www.youtube.com/watch?v=Q6iK6DjV_iE',
-      views: 47900,
-      age_rating: 'teens',
-      featured: 0
-    },
-    {
-      title: 'Spirited Away',
-      description: 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.',
-      category: 'Anime',
-      year: 2001,
-      file: '',
-      poster: '/images/spirited-away.jpg',
-      video_url: 'https://www.youtube.com/watch?v=ByXuk9QqQkk',
-      trailer_url: 'https://www.youtube.com/watch?v=ByXuk9QqQkk',
-      views: 83500,
-      age_rating: 'kids',
-      featured: 0
-    },
-
-    // --- Hollywood Classics & Official Free Releases ---
+    // --- Hollywood Classics & Legal Feature Films (Complete Full Movies) ---
     {
       title: 'Sherlock Holmes: Dressed to Kill',
       description: 'Sherlock Holmes and Dr. Watson investigate a string of suspicious murders linked to three innocuous music boxes crafted by an inmate at Dartmoor Prison.',
@@ -351,13 +253,13 @@ function seed(database) {
   `);
   const updateStmt = db.prepare(`
     UPDATE videos SET 
-      description = @description, category = @category, year = @year,
+      title = @title, description = @description, category = @category, year = @year,
       poster = @poster, video_url = @video_url, trailer_url = @trailer_url,
       age_rating = @age_rating, featured = @featured, series = @series, episode = @episode
     WHERE id = @id
   `);
 
-  for (const item of defaultTitles) {
+  for (const item of verifiedTitles) {
     const existing = checkStmt.get(item.title, item.video_url);
     if (existing) {
       updateStmt.run({
@@ -379,7 +281,7 @@ function seed(database) {
     }
   }
 
-  console.log('Seeding complete! Total videos in database:', db.prepare('SELECT COUNT(*) as count FROM videos').get().count);
+  console.log('Seeding complete! Verified full titles in database:', db.prepare('SELECT COUNT(*) as count FROM videos').get().count);
 }
 
 if (require.main === module) {

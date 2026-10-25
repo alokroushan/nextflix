@@ -13,7 +13,7 @@
   <a class="h on" data-v="home">Home</a><a class="h" data-v="pop">New &amp; Popular</a><a class="h" data-v="list">My List</a>
   <div class="sp">
     <div class="sbox" id="sb"><button class="ico" id="si" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><input id="q" type="search" placeholder="Titles, categories"></div>
-    <a href="/" style="color:#e5e5e5;font-size:.85rem;text-decoration:none;padding:5px 12px;border-radius:4px;border:1px solid #555;" title="Sign out to Signup page">Sign Out</a>
+    <a href="/signup.html?mode=signin" id="signOutBtn" style="color:#e5e5e5;font-size:.85rem;text-decoration:none;padding:5px 12px;border-radius:4px;border:1px solid #555;" title="Sign out to Sign In page">Sign Out</a>
     <a class="b g" id="adminBtn" href="/admin" style="padding:6px 14px;font-size:.85rem;text-decoration:none;display:inline-flex;align-items:center;">Admin</a>
     <button class="av" id="profileBtn" aria-label="Switch profile">M</button>
   </div>
@@ -89,9 +89,9 @@
   <button class="x" id="close" aria-label="Close">✕</button>
   <video id="vid" controls playsinline></video>
   <audio id="aud" controls></audio><img id="pic" alt=""><iframe id="doc" title="Document preview"></iframe>
-  <iframe id="yt" title="YouTube video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <iframe id="yt" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
   <div class="mi"><h3 id="pt"></h3><div class="m" id="pm"></div><p id="pd"></p><div id="episodes"></div><div class="player-tools" id="tools"><button data-skip="-15">↶ 15s</button><button data-skip="15">15s ↷</button><label>Speed <select id="speed"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></label></div>
-  <div class="acts" style="margin-top:16px"><button class="b g" id="pl"></button><a class="b g trailer" id="trailer" target="_blank" rel="noopener">▶ Trailer</a></div></div>
+  <div class="acts" style="margin-top:16px"><button class="b g" id="pl"></button><a class="b g trailer" id="trailer" target="_blank" rel="noopener">▶ Trailer</a><a class="b g yt-direct" id="ytDirect" target="_blank" rel="noopener" style="display:none;margin-left:8px;text-decoration:none;">▶ Watch on YouTube</a></div></div>
 </div></div>
 
 <aside id="admin">
