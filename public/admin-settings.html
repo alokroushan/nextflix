@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin settings - NEXTFLIX</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link rel="stylesheet" href="/streamflix.css">
+</head>
+<body class="settings-page">
+<main class="settings-card">
+  <a class="settings-back" href="/">← Back to NEXTFLIX</a>
+  <div class="logo"><img src="/images/nextflix-logo.png" alt="NEXTFLIX" class="logo-img"></div>
+  <h1>Admin settings</h1>
+  <p class="admin-sub">Change the password used to manage your video library.</p>
+  <form class="f" id="passwordForm">
+    <label for="currentPassword">Current password</label>
+    <input id="currentPassword" name="currentPassword" type="password" autocomplete="current-password" required>
+    <label for="newPassword">New password</label>
+    <input id="newPassword" name="newPassword" type="password" minlength="8" autocomplete="new-password" required>
+    <label for="confirmPassword">Confirm new password</label>
+    <input id="confirmPassword" name="confirmPassword" type="password" minlength="8" autocomplete="new-password" required>
+    <button class="b r" type="submit">Change password</button>
+    <div class="msg" id="passwordMessage"></div>
+  </form>
+</main>
+<script src="/admin-settings.js"></script>
+</body>
+</html>

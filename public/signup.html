@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXTFLIX</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<body class="signup-body">
+
+  <!-- ═══════════════════════════════════════════════
+       HEADER (CLEAN AUTH HEADER)
+  ═══════════════════════════════════════════════ -->
+  <header class="signup-header">
+    <div class="signup-header-inner">
+      <a href="index.html" class="signup-logo-link" aria-label="NEXTFLIX Home">
+        <img src="images/nextflix-logo.png" alt="NEXTFLIX" class="signup-logo-img" />
+      </a>
+      <a href="/browse" class="signup-browse-link" id="signupBrowseLink" title="Jump straight to NEXTFLIX">Start Watching &rarr;</a>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN AUTH CONTAINER
+  ═══════════════════════════════════════════════ -->
+  <main class="signup-main">
+    <div class="signup-container">
+      <div class="signup-card">
+        
+        <h1 class="signup-heading" id="authHeading">Enter your info to sign in</h1>
+        <p class="signup-subheading" id="authSubheading">
+          Or <a href="#" class="signup-sublink" id="authModeToggle">get started with a new account.</a>
+        </p>
+
+        <form class="signup-form" id="signupForm" novalidate>
+          <div class="signup-floating-wrap">
+            <input 
+              type="text" 
+              id="signupInput" 
+              class="signup-input" 
+              placeholder=" " 
+              required 
+              autocomplete="email tel"
+            />
+            <label for="signupInput" class="signup-label">Email or mobile number</label>
+            <div class="signup-error-msg" id="signupError"></div>
+          </div>
+
+          <button type="submit" class="btn-signup-continue" id="signupContinueBtn">
+            Continue
+          </button>
+        </form>
+
+        <div class="signup-help-wrap">
+          <button type="button" class="btn-get-help" id="getHelpBtn" aria-expanded="false">
+            <span>Get Help</span>
+            <svg class="help-chevron" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+          </button>
+          
+          <div class="help-drawer" id="helpDrawer" hidden>
+            <a href="#" class="help-link">Forgot email or mobile number?</a>
+            <a href="#" class="help-link">Learn more about sign-in</a>
+          </div>
+        </div>
+
+        <div class="signup-recaptcha">
+          <p>This page is protected by Google reCAPTCHA to ensure you're not a bot.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       SIGNUP SCRIPT
+  ═══════════════════════════════════════════════ -->
+  <script>
+    (function initSignupPage() {
+      const form = document.getElementById('signupForm');
+      const input = document.getElementById('signupInput');
+      const errorMsg = document.getElementById('signupError');
+      const continueBtn = document.getElementById('signupContinueBtn');
+      const getHelpBtn = document.getElementById('getHelpBtn');
+      const helpDrawer = document.getElementById('helpDrawer');
+      const authHeading = document.getElementById('authHeading');
+      const authSubheading = document.getElementById('authSubheading');
+
+      // Mode: true for "sign in", false for "get started"
+      // Default: true (matching the user's latest reference screenshot)
+      let isSignInMode = true;
+
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        if (mode === 'signup' || mode === 'get-started') {
+          isSignInMode = false;
+        }
+        const emailParam = urlParams.get('email');
+        if (emailParam && input) {
+          input.value = decodeURIComponent(emailParam);
+        }
+      } catch (err) {
+        console.warn('Could not parse query params', err);
+      }
+
+      function updateAuthMode() {
+        if (isSignInMode) {
+          authHeading.textContent = 'Enter your info to sign in';
+          authSubheading.innerHTML = 'Or <a href="#" class="signup-sublink" id="authModeToggle">get started with a new account.</a>';
+        } else {
+          authHeading.textContent = 'Enter your info to get started';
+          authSubheading.innerHTML = 'Or <a href="#" class="signup-sublink" id="authModeToggle">sign in to an existing account.</a>';
+        }
+
+        const toggleBtn = document.getElementById('authModeToggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isSignInMode = !isSignInMode;
+            updateAuthMode();
+          });
+        }
+      }
+
+      updateAuthMode();
+
+      // Toggle Get Help accordion
+      if (getHelpBtn && helpDrawer) {
+        getHelpBtn.addEventListener('click', () => {
+          const isOpen = getHelpBtn.getAttribute('aria-expanded') === 'true';
+          getHelpBtn.setAttribute('aria-expanded', !isOpen);
+          helpDrawer.hidden = isOpen;
+          getHelpBtn.classList.toggle('open', !isOpen);
+        });
+      }
+
+      // Input validation
+      function validateInput() {
+        const value = input.value.trim();
+        if (!value) {
+          errorMsg.textContent = 'Email or mobile number is required.';
+          input.classList.add('has-error');
+          return false;
+        }
+        errorMsg.textContent = '';
+        input.classList.remove('has-error');
+        return true;
+      }
+
+      input.addEventListener('input', () => {
+        if (input.classList.contains('has-error')) {
+          validateInput();
+        }
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (validateInput()) {
+          continueBtn.disabled = true;
+          const userVal = input.value.trim();
+          continueBtn.textContent = isSignInMode ? 'Signing In...' : 'Setting up membership...';
+
+          try {
+            const userName = userVal.includes('@') ? userVal.split('@')[0] : userVal;
+            localStorage.setItem('nextflix_user', JSON.stringify({
+              username: userName,
+              account: userVal,
+              mode: isSignInMode ? 'signin' : 'signup',
+              isLoggedIn: true,
+              authTime: Date.now()
+            }));
+            localStorage.setItem('activeProfile', 'me');
+          } catch (err) {
+            console.error('Session storage error:', err);
+          }
+
+          setTimeout(() => {
+            if (window.location.protocol.startsWith('http')) {
+              window.location.href = '/browse';
+            } else {
+              window.location.href = 'browse.html';
+            }
+          }, 350);
+        }
+      });
+
+      const browseLink = document.getElementById('signupBrowseLink');
+      if (browseLink) {
+        browseLink.href = window.location.protocol.startsWith('http') ? '/browse' : 'browse.html';
+      }
+    })();
+  </script>
+</body>
+</html>

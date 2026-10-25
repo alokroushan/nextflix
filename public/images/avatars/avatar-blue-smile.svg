@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" rx="6" fill="#0071eb" />
+  <!-- Happy eyes -->
+  <circle cx="68" cy="88" r="12" fill="#ffffff" />
+  <circle cx="132" cy="88" r="12" fill="#ffffff" />
+  <!-- Smile -->
+  <path d="M 62 125 Q 100 162 138 125" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round" />
+</svg>

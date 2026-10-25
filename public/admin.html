@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Studio – NEXTFLIX</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <link rel="stylesheet" href="/streamflix.css" />
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       NEXTFLIX ADMIN STUDIO — FULL PAGE STYLES
+       ═══════════════════════════════════════════════════════════════ */
+    :root {
+      --admin-bg: #111111;
+      --admin-card: #1a1a1a;
+      --admin-card-hover: #222222;
+      --admin-border: #2e2e2e;
+      --admin-red: #e50914;
+      --admin-red-hover: #f40612;
+      --admin-green: #46d369;
+      --admin-text-muted: #999999;
+    }
+
+    body.admin-body {
+      background: var(--admin-bg);
+      color: #ffffff;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    .admin-navbar {
+      background: #141414;
+      border-bottom: 1px solid var(--admin-border);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+    }
+
+    .admin-brand .logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .admin-pill-badge {
+      background: rgba(229, 9, 20, 0.15);
+      color: var(--admin-red);
+      border: 1px solid rgba(229, 9, 20, 0.4);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .admin-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-nav-browse {
+      color: #cccccc;
+      font-size: 0.875rem;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid #444444;
+      transition: all 0.2s;
+    }
+
+    .btn-nav-browse:hover {
+      color: #ffffff;
+      border-color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-nav-logout {
+      background: transparent;
+      border: 1px solid #ff4d4d;
+      color: #ff4d4d;
+      font-size: 0.875rem;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-nav-logout:hover {
+      background: #ff4d4d;
+      color: #ffffff;
+    }
+
+    /* Main Container */
+    .admin-main {
+      flex: 1;
+      padding: 2rem 4% 4rem;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* Auth Screen (When logged out) */
+    .admin-auth-wrap {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+    }
+
+    .admin-auth-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    .admin-auth-card h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-auth-card p {
+      color: var(--admin-text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.45;
+    }
+
+    .admin-auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .admin-field-label {
+      font-size: 0.825rem;
+      color: #cccccc;
+      margin-bottom: -0.5rem;
+      display: block;
+    }
+
+    .admin-input {
+      background: #262626;
+      border: 1px solid #444444;
+      border-radius: 4px;
+      color: #ffffff;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .admin-input:focus {
+      border-color: #ffffff;
+      background: #2e2e2e;
+    }
+
+    .btn-admin-submit {
+      background: var(--admin-red);
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-admin-submit:hover {
+      background: var(--admin-red-hover);
+    }
+
+    .admin-helper-text {
+      font-size: 0.8rem;
+      color: #777777;
+      margin-top: 0.25rem;
+    }
+
+    .admin-error-box {
+      color: #ff7373;
+      font-size: 0.85rem;
+      min-height: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Dashboard Header & Metrics */
+    .admin-header-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-header-subtitle {
+      color: var(--admin-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--admin-text-muted);
+    }
+
+    .metric-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .metric-tag {
+      font-size: 0.75rem;
+      color: var(--admin-green);
+    }
+
+    /* Tabs Bar */
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--admin-border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .admin-tab-btn {
+      background: none;
+      border: none;
+      color: #999999;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.85rem 1.35rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .admin-tab-btn:hover {
+      color: #ffffff;
+    }
+
+    .admin-tab-btn.active {
+      color: #ffffff;
+      border-bottom-color: var(--admin-red);
+    }
+
+    .admin-tab-content {
+      display: none;
+    }
+
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    /* Tab 1: Video Library Grid & Table */
+    .library-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .library-search-input {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 4px;
+      color: #ffffff;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      width: 320px;
+      outline: none;
+    }
+
+    .library-search-input:focus {
+      border-color: #666666;
+    }
+
+    .library-grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .video-admin-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .video-admin-card:hover {
+      border-color: #555555;
+      transform: translateY(-2px);
+    }
+
+    .card-thumb-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #222222;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-ribbon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--admin-red);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .views-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.75);
+      color: #ffffff;
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .card-admin-body {
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .card-admin-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-admin-meta {
+      font-size: 0.8rem;
+      color: var(--admin-text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-admin-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: auto;
+      border-top: 1px solid #282828;
+      padding-top: 0.85rem;
+    }
+
+    .btn-action {
+      background: #2a2a2a;
+      border: 1px solid #444444;
+      color: #ffffff;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn-action:hover {
+      background: #383838;
+      border-color: #ffffff;
+    }
+
+    .btn-action.btn-banner {
+      color: #ffc107;
+      border-color: #665200;
+    }
+
+    .btn-action.btn-banner:hover {
+      background: rgba(255, 193, 7, 0.15);
+      border-color: #ffc107;
+    }
+
+    .btn-action.btn-delete {
+      color: #ff6b6b;
+      margin-left: auto;
+      border-color: #552222;
+    }
+
+    .btn-action.btn-delete:hover {
+      background: rgba(255, 107, 107, 0.15);
+      border-color: #ff6b6b;
+    }
+
+    /* Forms in Tabs */
+    .admin-form-panel {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 720px;
+    }
+
+    .admin-form-panel h3 {
+      font-size: 1.35rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-form-panel p {
+      color: var(--admin-text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      color: #cccccc;
+      font-weight: 500;
+    }
+
+    .form-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.5rem 0 1.25rem;
+    }
+
+    .form-checkbox-label input {
+      accent-color: var(--admin-red);
+      width: 18px;
+      height: 18px;
+    }
+
+    .upload-progress-bar {
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+      margin-bottom: 1rem;
+    }
+
+    .upload-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--admin-red);
+      transition: width 0.2s;
+    }
+
+    .alert-msg {
+      font-size: 0.9rem;
+      min-height: 1.3rem;
+      margin-top: 0.75rem;
+    }
+
+    .alert-msg.success {
+      color: var(--admin-green);
+    }
+
+    .alert-msg.error {
+      color: #ff6b6b;
+    }
+
+    /* Edit Modal Popup */
+    .admin-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 200;
+      display: none;
+      place-items: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+
+    .admin-modal-overlay.open {
+      display: grid;
+    }
+
+    .admin-modal-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .admin-navbar {
+        padding: 0 1rem;
+      }
+      .admin-main {
+        padding: 1.5rem 1rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <!-- ═══════════════════════════════════════════════
+       TOP ADMIN NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <header class="admin-navbar">
+    <div class="admin-nav-left">
+      <a href="/browse" class="admin-brand">
+        <img src="/images/nextflix-logo.png" alt="NEXTFLIX" class="logo-img" />
+      </a>
+      <span class="admin-pill-badge">Admin Studio</span>
+    </div>
+
+    <div class="admin-nav-right">
+      <a href="/browse" class="btn-nav-browse" title="Return to Home">← Return to Home</a>
+      <button class="btn-nav-logout" id="topLogoutBtn" style="display:none;">Log Out</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       1. AUTH / SIGN IN CARD (When not logged in)
+  ═══════════════════════════════════════════════ -->
+  <div class="admin-auth-wrap" id="adminAuthWrap">
+    <div class="admin-auth-card">
+      <img src="/images/nextflix-logo.png" alt="NEXTFLIX" style="height: 32px; margin-bottom: 1.5rem;" />
+      <h1>Admin Studio</h1>
+      <p>Enter the admin password to access video library management and studio publishing.</p>
+
+      <form class="admin-auth-form" id="adminLoginForm">
+        <label for="adminPasswordInput" class="admin-field-label">Admin Password</label>
+        <input 
+          type="password" 
+          id="adminPasswordInput" 
+          class="admin-input" 
+          placeholder="Enter password..." 
+          required 
+          autocomplete="current-password"
+        />
+        <div class="admin-helper-text">Default development password: <strong>admin123</strong></div>
+        <button type="submit" class="btn-admin-submit" id="loginSubmitBtn">Sign In to Studio</button>
+        <div class="admin-error-box" id="loginErrorMsg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       2. FULL ADMIN STUDIO DASHBOARD (When authenticated)
+  ═══════════════════════════════════════════════ -->
+  <main class="admin-main" id="adminDashboard" style="display: none;">
+    
+    <!-- Title & Metrics -->
+    <h1 class="admin-header-title">Studio Dashboard</h1>
+    <p class="admin-header-subtitle">Manage your titles, upload new video releases, and configure homepage banner.</p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-label">Total Titles</span>
+        <span class="metric-value" id="metricTotalTitles">0</span>
+        <span class="metric-tag">● In Active Library</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Total Views</span>
+        <span class="metric-value" id="metricTotalViews">0</span>
+        <span class="metric-tag">● Across All Titles</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Featured Banner</span>
+        <span class="metric-value" id="metricBannerTitle" style="font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">None</span>
+        <span class="metric-tag">★ Homepage Spotlight</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-tab="tabLibrary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+        <span>Video Library</span>
+      </button>
+
+      <button class="admin-tab-btn" data-tab="tabUpload">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+        <span>Quick Upload</span>
+      </button>
+
+      <button class="admin-tab-btn" data-tab="tabFolder">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        <span>Import Video Folder</span>
+      </button>
+
+      <button class="admin-tab-btn" data-tab="tabSecurity">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        <span>Password &amp; Security</span>
+      </button>
+    </div>
+
+    <!-- ─── TAB 1: VIDEO LIBRARY ─────────────────────────────── -->
+    <div class="admin-tab-content active" id="tabLibrary">
+      <div class="library-toolbar">
+        <input 
+          type="search" 
+          id="librarySearchInput" 
+          class="library-search-input" 
+          placeholder="Search by title or genre..." 
+        />
+        <div style="font-size:0.875rem;color:var(--admin-text-muted);">
+          Showing <span id="libraryCountDisplay" style="color:#ffffff;font-weight:700;">0</span> titles
+        </div>
+      </div>
+
+      <div class="library-grid-view" id="adminLibraryGrid"></div>
+    </div>
+
+    <!-- ─── TAB 2: QUICK UPLOAD ──────────────────────────────── -->
+    <div class="admin-tab-content" id="tabUpload">
+      <div class="admin-form-panel">
+        <h3>Publish a New Video</h3>
+        <p>Upload a video file or link to YouTube/MP4. A preview thumbnail is auto-captured if no poster is provided.</p>
+
+        <form id="uploadForm">
+          <div class="form-group">
+            <label>Title</label>
+            <input name="title" class="admin-input" placeholder="e.g. Suzume" />
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="admin-input" rows="3" placeholder="Movie synopsis or series overview..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Category</label>
+              <input name="category" class="admin-input" placeholder="e.g. Anime, Thriller, Action" />
+            </div>
+            <div class="form-group">
+              <label>Year</label>
+              <input name="year" type="number" class="admin-input" placeholder="2026" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Maturity Age Rating</label>
+            <select name="ageRating" class="admin-input">
+              <option value="adults" selected>For Adults (All audiences)</option>
+              <option value="teens">For Teens (Teens &amp; Kids)</option>
+              <option value="kids">For Kids only</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Video File (Upload directly)</label>
+            <input name="video" type="file" accept="video/*" class="admin-input" />
+          </div>
+
+          <div class="form-group">
+            <label>OR Direct Video URL (YouTube, Vimeo, or HTTP MP4 link)</label>
+            <input name="videoUrl" type="url" class="admin-input" placeholder="https://www.youtube.com/watch?v=..." />
+          </div>
+
+          <div class="form-group">
+            <label>Trailer URL (Optional)</label>
+            <input name="trailerUrl" type="url" class="admin-input" placeholder="https://..." />
+          </div>
+
+          <div class="form-group">
+            <label>Poster / Cover Image (Optional)</label>
+            <input name="poster" type="file" accept="image/*" class="admin-input" />
+          </div>
+
+          <label class="form-checkbox-label">
+            <input type="checkbox" name="featured" value="1" />
+            <span>Set as Homepage Featured Banner</span>
+          </label>
+
+          <div class="upload-progress-bar" id="uploadBar"><div class="upload-progress-fill" id="uploadFill"></div></div>
+          <button type="submit" class="btn-admin-submit" id="uploadSubmitBtn">Publish to NEXTFLIX</button>
+          <div class="alert-msg" id="uploadMsg"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── TAB 3: FOLDER IMPORT ─────────────────────────────── -->
+    <div class="admin-tab-content" id="tabFolder">
+      <div class="admin-form-panel">
+        <h3>Batch Import Video Folder</h3>
+        <p>Scan a folder on the server filesystem. Videos, episodes, and posters are catalogued automatically.</p>
+
+        <form id="folderImportForm">
+          <div class="form-group">
+            <label>Folder Path on Server</label>
+            <input name="folderPath" class="admin-input" placeholder="e.g. uploads\movies or D:\Videos\Anime" required />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Classification</label>
+              <select name="type" class="admin-input">
+                <option value="movie">Movie</option>
+                <option value="web-series">Web Series</option>
+                <option value="videos">Gallery Videos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Default Category</label>
+              <input name="category" class="admin-input" placeholder="e.g. Anime" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Series / Group Title (Optional)</label>
+              <input name="title" class="admin-input" placeholder="Leave blank to use folder name" />
+            </div>
+            <div class="form-group">
+              <label>Year (Optional)</label>
+              <input name="year" type="number" class="admin-input" placeholder="2026" />
+            </div>
+          </div>
+
+          <label class="form-checkbox-label">
+            <input type="checkbox" name="recursive" checked />
+            <span>Include Subfolders</span>
+          </label>
+
+          <button type="submit" class="btn-admin-submit">Scan &amp; Import Folder</button>
+          <div class="alert-msg" id="folderMsg"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── TAB 4: PASSWORD & SECURITY ───────────────────────── -->
+    <div class="admin-tab-content" id="tabSecurity">
+      <div class="admin-form-panel">
+        <h3>Change Admin Password</h3>
+        <p>Protect your studio by updating the administrator password. Must be at least 8 characters.</p>
+
+        <form id="changePasswordForm">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" name="currentPassword" class="admin-input" required autocomplete="current-password" />
+          </div>
+
+          <div class="form-group">
+            <label>New Password (min 8 chars)</label>
+            <input type="password" name="newPassword" class="admin-input" minlength="8" required autocomplete="new-password" />
+          </div>
+
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" name="confirmPassword" class="admin-input" minlength="8" required autocomplete="new-password" />
+          </div>
+
+          <button type="submit" class="btn-admin-submit">Update Password</button>
+          <div class="alert-msg" id="passwordMsg"></div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       EDIT VIDEO MODAL
+  ═══════════════════════════════════════════════ -->
+  <div class="admin-modal-overlay" id="editModalOverlay">
+    <div class="admin-modal-card">
+      <button class="modal-close-btn" id="editModalClose">&times;</button>
+      <h2 style="font-size:1.5rem;margin-bottom:0.5rem;">Edit Video Details</h2>
+      <p style="color:var(--admin-text-muted);font-size:0.875rem;margin-bottom:1.5rem;">Update title, metadata, banner spotlight, or visibility.</p>
+
+      <form id="editVideoForm">
+        <input type="hidden" name="id" id="editVideoId" />
+
+        <div class="form-group">
+          <label>Title</label>
+          <input name="title" id="editTitle" class="admin-input" required />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" id="editDescription" class="admin-input" rows="3"></textarea>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Category</label>
+            <input name="category" id="editCategory" class="admin-input" required />
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input name="year" id="editYear" type="number" class="admin-input" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Age Rating</label>
+          <select name="ageRating" id="editAgeRating" class="admin-input">
+            <option value="adults">Adults</option>
+            <option value="teens">Teens</option>
+            <option value="kids">Kids</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Video URL / YouTube Link</label>
+          <input name="videoUrl" id="editVideoUrl" type="url" class="admin-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Trailer Link</label>
+          <input name="trailerUrl" id="editTrailerUrl" type="url" class="admin-input" />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Replace Video File</label>
+            <input name="video" type="file" accept="video/*" class="admin-input" />
+          </div>
+          <div class="form-group">
+            <label>Replace Poster</label>
+            <input name="poster" type="file" accept="image/*" class="admin-input" />
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1.5rem;margin:1rem 0;">
+          <label class="form-checkbox-label" style="margin:0;">
+            <input type="checkbox" name="featured" id="editFeatured" value="1" />
+            <span>Spotlight as Homepage Banner</span>
+          </label>
+          <label class="form-checkbox-label" style="margin:0;">
+            <input type="checkbox" name="hidden" id="editHidden" value="1" />
+            <span>Hide from Catalog</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-admin-submit" style="width:100%;margin-top:1rem;">Save Changes</button>
+        <div class="alert-msg" id="editMsg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       ADMIN STUDIO LOGIC SCRIPT
+  ═══════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    // State
+    let adminToken = localStorage.getItem('tok') || sessionStorage.getItem('tok') || '';
+    let adminVideosList = [];
+
+    const authWrap = document.getElementById('adminAuthWrap');
+    const dashboard = document.getElementById('adminDashboard');
+    const topLogoutBtn = document.getElementById('topLogoutBtn');
+    const loginForm = document.getElementById('adminLoginForm');
+    const loginError = document.getElementById('loginErrorMsg');
+    const libraryGrid = document.getElementById('adminLibraryGrid');
+    const searchInput = document.getElementById('librarySearchInput');
+
+    // 1. Session Verification
+    async function verifySession() {
+      if (!adminToken) {
+        showAuthScreen();
+        return;
+      }
+      try {
+        const res = await fetch('/api/session', { headers: { 'x-token': adminToken } });
+        if (res.ok) {
+          showDashboard();
+        } else {
+          adminToken = '';
+          localStorage.removeItem('tok');
+          sessionStorage.removeItem('tok');
+          showAuthScreen();
+        }
+      } catch (e) {
+        showAuthScreen();
+      }
+    }
+
+    function showAuthScreen() {
+      authWrap.style.display = 'grid';
+      dashboard.style.display = 'none';
+      topLogoutBtn.style.display = 'none';
+    }
+
+    function showDashboard() {
+      authWrap.style.display = 'none';
+      dashboard.style.display = 'block';
+      topLogoutBtn.style.display = 'block';
+      loadLibrary();
+    }
+
+    // 2. Sign In Handler
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pwInput = document.getElementById('adminPasswordInput');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying...';
+      loginError.textContent = '';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwInput.value })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          adminToken = data.token;
+          localStorage.setItem('tok', data.token);
+          showDashboard();
+        } else {
+          loginError.textContent = data.error || 'Incorrect password.';
+        }
+      } catch (err) {
+        loginError.textContent = 'Network error contacting server.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In to Studio';
+      }
+    });
+
+    // 3. Log Out
+    topLogoutBtn.addEventListener('click', () => {
+      adminToken = '';
+      localStorage.removeItem('tok');
+      sessionStorage.removeItem('tok');
+      showAuthScreen();
+    });
+
+    // 4. Tabs Management
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-tab');
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) targetContent.classList.add('active');
+      });
+    });
+
+    // 5. Load Library Titles
+    async function loadLibrary(query = '') {
+      if (!adminToken) return;
+      try {
+        const res = await fetch(`/api/admin/videos?q=${encodeURIComponent(query)}`, {
+          headers: { 'x-token': adminToken }
+        });
+        if (!res.ok) {
+          if (res.status === 401) showAuthScreen();
+          return;
+        }
+        adminVideosList = await res.json();
+        renderLibrary();
+        updateMetrics();
+      } catch (err) {
+        console.error('Error fetching admin library:', err);
+      }
+    }
+
+    function getPosterUrl(v) {
+      if (v.poster) {
+        return '/media/' + String(v.poster).split(/[\\/]/).map(encodeURIComponent).join('/');
+      }
+      if (v.video_url && v.video_url.includes('youtube.com')) {
+        const match = v.video_url.match(/(?:v=|shorts\/|live\/)([^&?]+)/);
+        if (match) return `https://i.ytimg.com/vi/${match[1]}/hqdefault.jpg`;
+      }
+      return '/images/hero-bg.jpg';
+    }
+
+    function renderLibrary() {
+      const countEl = document.getElementById('libraryCountDisplay');
+      if (countEl) countEl.textContent = adminVideosList.length;
+
+      if (!adminVideosList.length) {
+        libraryGrid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: #888;">
+            <h3>No titles found</h3>
+            <p>Upload a video or import a folder using the tabs above.</p>
+          </div>
+        `;
+        return;
+      }
+
+      libraryGrid.innerHTML = adminVideosList.map(v => {
+        const posterSrc = getPosterUrl(v);
+        const isFeatured = v.featured === 1;
+        const isHidden = v.hidden === 1;
+
+        return `
+          <div class="video-admin-card" data-id="${v.id}">
+            <div class="card-thumb-wrap">
+              <img src="${posterSrc}" alt="${v.title}" class="card-thumb-img" onerror="this.src='/images/hero-bg.jpg'" />
+              ${isFeatured ? '<span class="featured-ribbon">★ Banner</span>' : ''}
+              <span class="views-badge">${v.views || 0} views</span>
+            </div>
+
+            <div class="card-admin-body">
+              <div>
+                <div class="card-admin-title" title="${v.title}">${v.title}</div>
+                <div class="card-admin-meta">
+                  <span>${v.year || '2026'}</span>
+                  <span>•</span>
+                  <span>${v.category || 'General'}</span>
+                  <span>•</span>
+                  <span style="text-transform:capitalize;">${v.age_rating || 'Adults'}</span>
+                  ${isHidden ? '<span style="color:#ff6b6b;font-weight:700;">[Hidden]</span>' : ''}
+                </div>
+              </div>
+
+              <div class="card-admin-actions">
+                <button class="btn-action btn-banner" data-banner-id="${v.id}" title="Set as featured banner">
+                  ${isFeatured ? '★ Spotlight' : '☆ Set Banner'}
+                </button>
+                <button class="btn-action" data-edit-id="${v.id}" title="Edit metadata">
+                  ✎ Edit
+                </button>
+                <button class="btn-action btn-delete" data-delete-id="${v.id}" title="Delete title">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateMetrics() {
+      const titlesEl = document.getElementById('metricTotalTitles');
+      const viewsEl = document.getElementById('metricTotalViews');
+      const bannerEl = document.getElementById('metricBannerTitle');
+
+      if (titlesEl) titlesEl.textContent = adminVideosList.length;
+      if (viewsEl) {
+        const totalViews = adminVideosList.reduce((acc, cur) => acc + (cur.views || 0), 0);
+        viewsEl.textContent = totalViews.toLocaleString();
+      }
+      if (bannerEl) {
+        const featured = adminVideosList.find(v => v.featured === 1);
+        bannerEl.textContent = featured ? featured.title : 'None set';
+      }
+    }
+
+    // Search filter
+    if (searchInput) {
+      let searchTimeout;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          loadLibrary(searchInput.value.trim());
+        }, 250);
+      });
+    }
+
+    // Library Click Delegation
+    libraryGrid.addEventListener('click', async (e) => {
+      // 1. Set as Banner
+      const bannerBtn = e.target.closest('[data-banner-id]');
+      if (bannerBtn) {
+        const id = bannerBtn.getAttribute('data-banner-id');
+        const video = adminVideosList.find(v => v.id === +id);
+        if (!video) return;
+        bannerBtn.disabled = true;
+
+        const fd = new FormData();
+        fd.append('title', video.title);
+        fd.append('description', video.description || '');
+        fd.append('category', video.category || 'Anime');
+        fd.append('year', video.year || 2026);
+        fd.append('featured', '1');
+        fd.append('ageRating', video.age_rating || 'adults');
+        fd.append('videoUrl', video.video_url || '');
+        fd.append('trailerUrl', video.trailer_url || '');
+
+        const r = await fetch(`/api/videos/${id}`, {
+          method: 'PUT',
+          headers: { 'x-token': adminToken },
+          body: fd
+        });
+        if (r.ok) loadLibrary(searchInput.value.trim());
+        return;
+      }
+
+      // 2. Edit Video
+      const editBtn = e.target.closest('[data-edit-id]');
+      if (editBtn) {
+        const id = editBtn.getAttribute('data-edit-id');
+        openEditModal(+id);
+        return;
+      }
+
+      // 3. Delete Video
+      const deleteBtn = e.target.closest('[data-delete-id]');
+      if (deleteBtn) {
+        const id = deleteBtn.getAttribute('data-delete-id');
+        const video = adminVideosList.find(v => v.id === +id);
+        if (confirm(`Are you sure you want to delete "${video?.title || 'this video'}" permanently?`)) {
+          const r = await fetch(`/api/videos/${id}`, {
+            method: 'DELETE',
+            headers: { 'x-token': adminToken }
+          });
+          if (r.ok) loadLibrary(searchInput.value.trim());
+        }
+      }
+    });
+
+    // 6. Edit Modal
+    const editModal = document.getElementById('editModalOverlay');
+    const editClose = document.getElementById('editModalClose');
+    const editForm = document.getElementById('editVideoForm');
+    const editMsg = document.getElementById('editMsg');
+
+    function openEditModal(id) {
+      const v = adminVideosList.find(item => item.id === id);
+      if (!v) return;
+
+      document.getElementById('editVideoId').value = v.id;
+      document.getElementById('editTitle').value = v.title;
+      document.getElementById('editDescription').value = v.description || '';
+      document.getElementById('editCategory').value = v.category || '';
+      document.getElementById('editYear').value = v.year || new Date().getFullYear();
+      document.getElementById('editAgeRating').value = v.age_rating || 'adults';
+      document.getElementById('editVideoUrl').value = v.video_url || '';
+      document.getElementById('editTrailerUrl').value = v.trailer_url || '';
+      document.getElementById('editFeatured').checked = v.featured === 1;
+      document.getElementById('editHidden').checked = v.hidden === 1;
+      editMsg.textContent = '';
+
+      editModal.classList.add('open');
+    }
+
+    if (editClose) {
+      editClose.addEventListener('click', () => editModal.classList.remove('open'));
+    }
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) editModal.classList.remove('open');
+    });
+
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editVideoId').value;
+      const fd = new FormData(editForm);
+      if (!document.getElementById('editFeatured').checked) fd.set('featured', '0');
+      if (!document.getElementById('editHidden').checked) fd.set('hidden', '0');
+
+      editMsg.textContent = 'Saving changes...';
+      editMsg.className = 'alert-msg';
+
+      try {
+        const res = await fetch(`/api/videos/${id}`, {
+          method: 'PUT',
+          headers: { 'x-token': adminToken },
+          body: fd
+        });
+        const d = await res.json();
+        if (res.ok) {
+          editMsg.textContent = 'Saved successfully!';
+          editMsg.className = 'alert-msg success';
+          setTimeout(() => {
+            editModal.classList.remove('open');
+            loadLibrary(searchInput.value.trim());
+          }, 400);
+        } else {
+          editMsg.textContent = d.error || 'Failed to update video.';
+          editMsg.className = 'alert-msg error';
+        }
+      } catch (err) {
+        editMsg.textContent = 'Network error saving video.';
+        editMsg.className = 'alert-msg error';
+      }
+    });
+
+    // 7. Quick Upload Form
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadMsg = document.getElementById('uploadMsg');
+    const uploadBar = document.getElementById('uploadBar');
+    const uploadFill = document.getElementById('uploadFill');
+
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      uploadMsg.textContent = '';
+      uploadBar.style.display = 'block';
+      uploadFill.style.width = '0%';
+
+      const fd = new FormData(uploadForm);
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/videos');
+      xhr.setRequestHeader('x-token', adminToken);
+
+      xhr.upload.onprogress = ev => {
+        if (ev.lengthComputable) {
+          const pct = Math.round((ev.loaded / ev.total) * 100);
+          uploadFill.style.width = pct + '%';
+        }
+      };
+
+      xhr.onload = () => {
+        uploadBar.style.display = 'none';
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (xhr.status === 200) {
+            uploadMsg.textContent = 'Published successfully! Video is live on NEXTFLIX.';
+            uploadMsg.className = 'alert-msg success';
+            uploadForm.reset();
+            loadLibrary();
+          } else {
+            uploadMsg.textContent = res.error || 'Upload failed.';
+            uploadMsg.className = 'alert-msg error';
+          }
+        } catch (e) {
+          uploadMsg.textContent = 'Upload completed.';
+          uploadMsg.className = 'alert-msg success';
+          uploadForm.reset();
+          loadLibrary();
+        }
+      };
+
+      xhr.onerror = () => {
+        uploadBar.style.display = 'none';
+        uploadMsg.textContent = 'Network error during upload.';
+        uploadMsg.className = 'alert-msg error';
+      };
+
+      xhr.send(fd);
+    });
+
+    // 8. Folder Import Form
+    const folderForm = document.getElementById('folderImportForm');
+    const folderMsg = document.getElementById('folderMsg');
+
+    folderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      folderMsg.textContent = 'Scanning and importing folder...';
+      folderMsg.className = 'alert-msg';
+
+      const fd = new FormData(folderForm);
+      try {
+        const res = await fetch('/api/import-folder', {
+          method: 'POST',
+          headers: { 'x-token': adminToken },
+          body: fd
+        });
+        const data = await res.json();
+        if (res.ok) {
+          folderMsg.textContent = `Imported ${data.imported} title(s) successfully!`;
+          folderMsg.className = 'alert-msg success';
+          folderForm.reset();
+          loadLibrary();
+        } else {
+          folderMsg.textContent = data.error || 'Could not import folder.';
+          folderMsg.className = 'alert-msg error';
+        }
+      } catch (err) {
+        folderMsg.textContent = 'Network error importing folder.';
+        folderMsg.className = 'alert-msg error';
+      }
+    });
+
+    // 9. Change Password Form
+    const pwForm = document.getElementById('changePasswordForm');
+    const pwMsg = document.getElementById('passwordMsg');
+
+    pwForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(pwForm);
+      const currentPassword = fd.get('currentPassword');
+      const newPassword = fd.get('newPassword');
+      const confirmPassword = fd.get('confirmPassword');
+
+      if (newPassword !== confirmPassword) {
+        pwMsg.textContent = 'New passwords do not match.';
+        pwMsg.className = 'alert-msg error';
+        return;
+      }
+
+      pwMsg.textContent = 'Updating password...';
+      pwMsg.className = 'alert-msg';
+
+      try {
+        const res = await fetch('/api/admin/password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-token': adminToken },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          pwMsg.textContent = 'Password changed successfully.';
+          pwMsg.className = 'alert-msg success';
+          pwForm.reset();
+        } else {
+          pwMsg.textContent = data.error || 'Failed to change password.';
+          pwMsg.className = 'alert-msg error';
+        }
+      } catch (err) {
+        pwMsg.textContent = 'Network error updating password.';
+        pwMsg.className = 'alert-msg error';
+      }
+    });
+
+    // Run verification on page load
+    verifySession();
+  </script>
+</body>
+</html>
+

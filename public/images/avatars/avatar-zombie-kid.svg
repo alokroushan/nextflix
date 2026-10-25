@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" rx="6" fill="#f5af19" />
+  <!-- Body/shirt -->
+  <path d="M 50 170 C 50 160 80 155 100 155 C 120 155 150 160 150 170 L 160 200 L 40 200 Z" fill="#582a72" />
+  <!-- Big green face -->
+  <rect x="52" y="65" width="96" height="95" rx="24" fill="#44a08d" />
+  <!-- Cute hair on top -->
+  <path d="M 45 75 C 45 40 70 30 100 30 C 130 30 155 40 155 75 C 145 70 135 65 125 75 C 115 65 105 65 95 72 C 85 65 75 65 65 74 Z" fill="#36220f" />
+  <!-- Big animated eyes -->
+  <circle cx="78" cy="110" r="16" fill="#ffffff" />
+  <circle cx="80" cy="110" r="9" fill="#141414" />
+  <circle cx="78" cy="107" r="3" fill="#ffffff" />
+  <circle cx="122" cy="110" r="16" fill="#ffffff" />
+  <circle cx="120" cy="110" r="9" fill="#141414" />
+  <circle cx="118" cy="107" r="3" fill="#ffffff" />
+  <!-- Cute smile -->
+  <path d="M 85 138 Q 100 150 115 138" stroke="#1c483f" stroke-width="5" fill="none" stroke-linecap="round" />
+  <!-- Forehead stitch -->
+  <line x1="72" y1="82" x2="88" y2="82" stroke="#1c483f" stroke-width="3" stroke-linecap="round" />
+  <line x1="76" y1="77" x2="76" y2="87" stroke="#1c483f" stroke-width="2.5" />
+  <line x1="84" y1="77" x2="84" y2="87" stroke="#1c483f" stroke-width="2.5" />
+</svg>

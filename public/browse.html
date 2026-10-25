@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXTFLIX</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link rel="stylesheet" href="/streamflix.css">
+</head>
+<body>
+<nav id="nav">
+  <a class="logo" id="logo" href="/browse" aria-label="NEXTFLIX"><img src="/images/nextflix-logo.png" alt="NEXTFLIX" class="logo-img"></a>
+  <a class="h on" data-v="home">Home</a><a class="h" data-v="pop">New &amp; Popular</a><a class="h" data-v="list">My List</a>
+  <div class="sp">
+    <div class="sbox" id="sb"><button class="ico" id="si" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><input id="q" type="search" placeholder="Titles, categories"></div>
+    <a href="/" style="color:#e5e5e5;font-size:.85rem;text-decoration:none;padding:5px 12px;border-radius:4px;border:1px solid #555;" title="Sign out to Signup page">Sign Out</a>
+    <a class="b g" id="adminBtn" href="/admin" style="padding:6px 14px;font-size:.85rem;text-decoration:none;display:inline-flex;align-items:center;">Admin</a>
+    <button class="av" id="profileBtn" aria-label="Switch profile">M</button>
+  </div>
+</nav>
+<main id="main"></main>
+<footer>Questions? Call 000-800-919-1743<br>© NEXTFLIX India. All rights reserved.</footer>
+
+<section class="profiles" id="profiles" aria-labelledby="profileTitle">
+  <div class="profiles-head">
+    <a class="logo" id="profilesLogo" href="/browse" aria-label="NEXTFLIX"><img src="/images/nextflix-logo.png" alt="NEXTFLIX" class="logo-img"></a>
+    <button type="button" class="btn-return-home" id="profilesBackBtn" title="Return to Home">← Return to Home</button>
+  </div>
+  <div class="profiles-center">
+    <h1 id="profileTitle">Who's watching?</h1>
+    <div class="profile-grid" id="profileGrid"></div>
+    <div class="manage-btn-wrap">
+      <button class="btn-manage-profiles" id="manageProfilesBtn" type="button">MANAGE PROFILES</button>
+    </div>
+  </div>
+</section>
+
+<!-- Full Edit Profile Modal -->
+<div class="profile-modal-overlay" id="profileEditModal" hidden>
+  <div class="profile-edit-card">
+    <h2 id="editModalHeading">Edit Profile</h2>
+    <div class="profile-edit-body">
+      <div class="profile-edit-avatar-col">
+        <div class="profile-edit-avatar-preview" id="editAvatarPreview"></div>
+        <button type="button" class="btn-change-avatar" id="btnChangeAvatar">Change Icon</button>
+      </div>
+      <div class="profile-edit-fields-col">
+        <div class="profile-field-group">
+          <label>Profile Name</label>
+          <input type="text" id="editProfileNameInput" class="profile-name-input" placeholder="Name" maxlength="20" autocomplete="off" />
+        </div>
+        <div class="profile-field-group">
+          <label>Maturity Settings</label>
+          <select id="editProfileAudience" class="profile-select-input">
+            <option value="For Adults">All Maturity Ratings (Adults)</option>
+            <option value="For Teens">For Teens &amp; Kids</option>
+            <option value="For Kids">For Kids only</option>
+          </select>
+        </div>
+        <div class="profile-field-group">
+          <label>Profile Lock PIN (Optional)</label>
+          <input type="password" id="editProfilePin" class="profile-pin-input" placeholder="4-digit PIN (leave blank to unlock)" maxlength="4" autocomplete="off" />
+        </div>
+      </div>
+    </div>
+    <div class="profile-edit-footer">
+      <button type="button" class="btn-profile-save" id="btnSaveProfile">Save</button>
+      <button type="button" class="btn-profile-cancel" id="btnCancelProfile">Cancel</button>
+      <button type="button" class="btn-profile-delete" id="btnDeleteProfile">Delete Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Avatar Selector Modal -->
+<div class="profile-modal-overlay" id="avatarPickerModal" hidden>
+  <div class="avatar-picker-card">
+    <h3>Choose a Profile Icon</h3>
+    <div class="avatar-picker-grid" id="avatarPickerGrid"></div>
+    <div class="avatar-picker-actions">
+      <button type="button" class="btn-upload-custom" id="btnUploadCustom">Upload Photo</button>
+      <button type="button" class="btn-profile-cancel" id="btnCancelAvatar">Cancel</button>
+    </div>
+  </div>
+</div>
+<input id="profileImage" type="file" accept="image/*" hidden>
+<div class="profile-dialog" id="profileDialog" hidden><div class="profile-dialog-card"><h3 id="profileDialogTitle"></h3><input id="profileDialogInput" autocomplete="off"><div class="profile-dialog-actions"><button id="profileDialogCancel" type="button">Cancel</button><button class="b r" id="profileDialogSave" type="button">Save</button></div></div></div>
+
+<div class="modal" id="modal"><div class="mb">
+  <button class="x" id="close" aria-label="Close">✕</button>
+  <video id="vid" controls playsinline></video>
+  <audio id="aud" controls></audio><img id="pic" alt=""><iframe id="doc" title="Document preview"></iframe>
+  <iframe id="yt" title="YouTube video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="mi"><h3 id="pt"></h3><div class="m" id="pm"></div><p id="pd"></p><div id="episodes"></div><div class="player-tools" id="tools"><button data-skip="-15">↶ 15s</button><button data-skip="15">15s ↷</button><label>Speed <select id="speed"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></label></div>
+  <div class="acts" style="margin-top:16px"><button class="b g" id="pl"></button><a class="b g trailer" id="trailer" target="_blank" rel="noopener">▶ Trailer</a></div></div>
+</div></div>
+
+<aside id="admin">
+  <h3>Admin studio <button class="x" id="aclose" aria-label="Close admin">✕</button></h3>
+  <p class="admin-sub">Manage your videos and homepage banner.</p>
+  <form class="f" id="login"><label>Admin password</label><input type="password" id="pw" placeholder="Default: admin123" required>
+    <button class="b r">Sign in</button><div class="msg" id="lmsg"></div></form>
+  <div id="panel" hidden>
+    <div class="admin-session"><span>Signed in as admin</span><span class="admin-session-actions"><a class="edit-delete" href="/admin-settings.html">Settings</a><button class="edit-delete" id="logout" type="button">Logout</button></span></div>
+    <section class="admin-section"><h3>Quick upload</h3><form class="f" id="up">
+      <input name="title" placeholder="Title (auto-filled from filename if blank)">
+      <textarea name="description" rows="3" placeholder="Description"></textarea>
+      <div class="two"><input name="category" placeholder="Category (e.g. Thriller)"><input name="year" type="number" placeholder="Year"></div>
+      <label>Age rating</label><select name="ageRating"><option value="adults">Adults</option><option value="teens">Teens</option><option value="kids">Kids</option></select>
+      <label>Video file (or use a direct video link below)</label><input type="file" name="video" accept="video/*">
+      <input name="videoUrl" type="url" placeholder="Or direct video link (https://...)">
+      <input name="trailerUrl" type="url" placeholder="Trailer link (optional)">
+      <label>Poster image (optional, a frame is captured if you skip it)</label><input type="file" name="poster" accept="image/*">
+      <label><input type="checkbox" name="featured" value="1"> Use as homepage banner</label>
+      <div class="bar" id="bar"><i></i></div>
+      <button class="b r">Upload video</button><div class="msg" id="umsg"></div>
+    </form></section>
+    <details class="admin-section"><summary>Import a video folder</summary><form class="f" id="folderUp">
+      <input name="folderPath" placeholder="Folder path on this server, e.g. uploads\movies" required>
+      <div class="two"><select name="type"><option value="movie">Movie</option><option value="web-series">Web Series</option><option value="videos">Gallery Videos</option></select><input name="category" placeholder="Category (optional)"></div>
+      <div class="two"><input name="title" placeholder="Title (optional)"><input name="year" type="number" placeholder="Year (optional)"></div>
+      <textarea name="description" rows="2" placeholder="Description (optional)"></textarea>
+      <input name="videoUrl" type="url" placeholder="Video/link URL (optional)">
+      <input name="trailerUrl" type="url" placeholder="Trailer URL (optional)">
+      <label><input name="recursive" type="checkbox" checked> Include subfolders</label>
+      <button class="b r">Import folder</button><div class="msg" id="fmsg"></div>
+    </form></details>
+    <details class="admin-section"><summary>Manage library</summary><div id="lib" style="margin-top:14px"></div></details>
+  </div>
+</aside>
+<div class="library-actions" id="libraryActions" hidden><div class="library-actions-card"><h4 id="libraryActionTitle"></h4><div class="library-actions-buttons"><button data-action-edit type="button">Edit</button><button class="danger" data-action-delete type="button">Delete</button><button data-action-close type="button">Cancel</button></div></div></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

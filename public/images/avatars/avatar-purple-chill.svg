@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <rect width="200" height="200" rx="6" fill="#7928ca" />
+  <!-- Cool sunglasses -->
+  <rect x="42" y="75" width="48" height="35" rx="8" fill="#141414" />
+  <rect x="110" y="75" width="48" height="35" rx="8" fill="#141414" />
+  <line x1="90" y1="88" x2="110" y2="88" stroke="#141414" stroke-width="8" />
+  <!-- Grin -->
+  <path d="M 68 135 Q 100 165 132 135" stroke="#ffffff" stroke-width="8" fill="none" stroke-linecap="round" />
+</svg>

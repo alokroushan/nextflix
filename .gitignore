@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Large Raw Video Media Files (> 100MB blocked by GitHub)
+# (Posters, thumbnails, and images in uploads/ are preserved)
+uploads/**/*.mp4
+uploads/**/*.mkv
+uploads/**/*.webm
+uploads/**/*.avi
+uploads/**/*.mov
+uploads/**/*.m4v
+uploads/imported/
+*.mp4
+*.mkv
+*.webm
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary database journal files
+*.db-journal
+*.db-wal
+*.db-shm

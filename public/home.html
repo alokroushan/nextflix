@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXTFLIX – Home</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="home.css" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<body class="browse-body">
+
+  <!-- ═══════════════════════════════════════════════
+       BROWSE NAVBAR
+  ═══════════════════════════════════════════════ -->
+  <header class="browse-nav" id="browseNav">
+    <div class="browse-nav-left">
+      <a href="home.html" class="browse-logo-link" aria-label="NEXTFLIX Home">
+        <img src="images/nextflix-logo.png" alt="NEXTFLIX" class="browse-logo-img" />
+      </a>
+      
+      <ul class="browse-nav-menu">
+        <li class="browse-nav-item"><a href="#home" class="active" id="navHome">Home</a></li>
+        <li class="browse-nav-item"><a href="#trending" id="navTrending">Trending</a></li>
+        <li class="browse-nav-item"><a href="#top10" id="navTop10">Top 10</a></li>
+        <li class="browse-nav-item"><a href="#anime" id="navAnime">Anime Movies</a></li>
+        <li class="browse-nav-item"><a href="#mylist" id="navMyList">My List</a></li>
+      </ul>
+    </div>
+
+    <div class="browse-nav-right">
+      <!-- Search -->
+      <div class="browse-search-wrap">
+        <div class="browse-search-box" id="searchBox">
+          <button class="browse-search-btn" id="searchToggleBtn" aria-label="Search titles">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <input type="search" id="searchInput" class="browse-search-input" placeholder="Titles, genres..." autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <button class="browse-notif-btn" id="notifBtn" aria-label="Notifications" title="Notifications">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span class="browse-notif-badge"></span>
+      </button>
+
+      <!-- Profile & Account Dropdown -->
+      <div class="browse-profile-container">
+        <button class="browse-profile-btn" id="profileBtn" aria-expanded="false" aria-label="User profile menu">
+          <div class="browse-avatar-box" id="navAvatar">M</div>
+          <span class="browse-caret"></span>
+        </button>
+
+        <div class="browse-profile-dropdown" id="profileDropdown">
+          <div class="dropdown-user-info">
+            <div class="dropdown-user-name" id="dropdownUserName">Member</div>
+            <div class="dropdown-user-email" id="dropdownUserEmail">Signed in</div>
+          </div>
+          
+          <button class="dropdown-item" id="switchProfileBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span>Switch Profile</span>
+          </button>
+
+          <a href="/admin" class="dropdown-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            <span>Admin Studio</span>
+          </a>
+
+          <a href="index.html" class="dropdown-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Landing Page</span>
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="signup.html?mode=signin" class="dropdown-item signout-item" id="signOutBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            <span>Sign Out of NEXTFLIX</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       HERO FEATURE BANNER
+  ═══════════════════════════════════════════════ -->
+  <section class="browse-hero" id="heroSection">
+    <div class="browse-hero-bg">
+      <video class="browse-hero-video" id="heroVideo" autoplay loop muted playsinline poster="images/hero-bg.jpg">
+        <source src="images/gemini_generated_video_35d56ebe.mp4" type="video/mp4" />
+      </video>
+      <div class="browse-hero-vignette-radial"></div>
+      <div class="browse-hero-vignette-linear"></div>
+    </div>
+
+    <div class="browse-hero-content">
+      <div class="browse-badge">
+        <span class="browse-badge-n">N</span>
+        <span>Film</span>
+      </div>
+      <h1 class="browse-hero-title" id="heroTitle">A SILENT VOICE</h1>
+      <p class="browse-hero-desc" id="heroDesc">
+        A former elementary school bully seeks redemption and attempts to make amends with the deaf girl he once tormented years earlier.
+      </p>
+
+      <div class="browse-hero-actions">
+        <button class="btn-hero-play" id="heroPlayBtn" data-movie="silent-voice">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span>Play</span>
+        </button>
+
+        <button class="btn-hero-info" id="heroInfoBtn" data-movie="silent-voice">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>More Info</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="browse-hero-controls">
+      <button class="hero-mute-btn" id="heroMuteBtn" aria-label="Toggle mute">
+        <svg id="muteIcon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        </svg>
+      </button>
+      <div class="hero-maturity-badge">U/A 13+</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       CONTENT ROWS
+  ═══════════════════════════════════════════════ -->
+  <main class="browse-content" id="browseContent">
+    
+    <!-- Continue Watching Row (dynamically populated) -->
+    <section class="content-row" id="rowContinue">
+      <div class="row-header">
+        <h2 class="row-title">Continue Watching for You</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackContinue"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Top 10 Today Row -->
+    <section class="content-row top10-row" id="rowTop10">
+      <div class="row-header">
+        <h2 class="row-title">Top 10 Movies in India Today</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackTop10"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Trending Now Row -->
+    <section class="content-row" id="rowTrending">
+      <div class="row-header">
+        <h2 class="row-title">Trending Now</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackTrending"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Anime Masterpieces Row -->
+    <section class="content-row" id="rowAnime">
+      <div class="row-header">
+        <h2 class="row-title">Acclaimed Anime Masterpieces</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackAnime"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Emotional & Romance Row -->
+    <section class="content-row" id="rowRomance">
+      <div class="row-header">
+        <h2 class="row-title">Heartfelt Romance &amp; Drama</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackRomance"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- My List Row -->
+    <section class="content-row" id="rowMyList">
+      <div class="row-header">
+        <h2 class="row-title">My List</h2>
+      </div>
+      <div class="carousel-viewport-wrap">
+        <button class="row-arrow-btn arrow-left" aria-label="Previous titles">&#8249;</button>
+        <div class="carousel-row-track" id="trackMyList"></div>
+        <button class="row-arrow-btn arrow-right" aria-label="Next titles">&#8250;</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       VIDEO PLAYER MODAL
+  ═══════════════════════════════════════════════ -->
+  <div class="video-player-modal" id="videoModal" aria-hidden="true" role="dialog">
+    <div class="player-card">
+      <button class="player-close-btn" id="playerCloseBtn" aria-label="Close video player">&times;</button>
+      
+      <div class="player-video-wrap">
+        <video class="player-main-video" id="playerVideo" controls playsinline>
+          <source src="images/gemini_generated_video_35d56ebe.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <div class="player-info-body">
+        <div class="player-title-row">
+          <h2 class="player-title-heading" id="playerTitle">A Silent Voice</h2>
+          <button class="card-icon-btn" id="playerListToggleBtn" title="Add / Remove My List">+</button>
+        </div>
+
+        <div class="player-tools-bar">
+          <button class="player-tool-btn" id="playerSkipBack" title="Rewind 15 seconds">&#8630; 15s</button>
+          <button class="player-tool-btn" id="playerSkipForward" title="Forward 15 seconds">15s &#8631;</button>
+          
+          <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.875rem;margin-left:auto;">
+            <span>Speed</span>
+            <select class="player-speed-select" id="playerSpeedSelect">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1.0x (Normal)</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="player-meta-tags">
+          <span class="player-match-pct" id="playerMatch">98% Match</span>
+          <span id="playerYear">2016</span>
+          <span class="card-maturity" id="playerRating">U/A 13+</span>
+          <span id="playerDuration">2h 10m</span>
+          <span style="border:1px solid #777;padding:0 3px;border-radius:2px;font-size:0.75rem;">HD</span>
+        </div>
+
+        <p class="player-synopsis" id="playerSynopsis">
+          A former elementary school bully seeks redemption and attempts to make amends with the deaf girl he once tormented years earlier.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       WHO'S WATCHING PROFILES OVERLAY
+  ═══════════════════════════════════════════════ -->
+  <section class="profiles-overlay" id="profilesOverlay" aria-labelledby="profileHeading">
+    <div class="profiles-top-bar">
+      <a href="home.html" class="browse-logo-link">
+        <img src="images/nextflix-logo.png" alt="NEXTFLIX" class="browse-logo-img" />
+      </a>
+      <button type="button" id="closeProfilesBtn" style="background:none;border:1px solid #777;color:#fff;border-radius:4px;padding:6px 14px;cursor:pointer;">
+        Done
+      </button>
+    </div>
+
+    <div class="profiles-content-center">
+      <h1 class="profiles-heading" id="profileHeading">Who's watching?</h1>
+      <div class="profiles-grid" id="profilesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="site-footer" style="border-top: 1px solid #222; margin-top: 4rem;">
+    <div class="footer-inner">
+      <p class="footer-call">Questions? Call <a href="tel:000-800-919-1743" class="footer-phone">000-800-919-1743</a></p>
+      <ul class="footer-links-grid">
+        <li><a href="home.html">Audio Description</a></li>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">Media Center</a></li>
+        <li><a href="#">Investor Relations</a></li>
+        <li><a href="#">Jobs</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Legal Notices</a></li>
+        <li><a href="#">Corporate Information</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+      <p class="footer-country">&copy; NEXTFLIX India. Reverse engineered streaming experience.</p>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════
+       BROWSE JAVASCRIPT LOGIC
+  ═══════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ─── 1. MOVIE METADATA CATALOG ───────────────────────── */
+    const MOVIES_DATA = [
+      {
+        id: 'silent-voice',
+        title: 'A Silent Voice',
+        img: 'images/silent-voice.jpg',
+        year: 2016,
+        rating: 'U/A 13+',
+        match: 99,
+        duration: '2h 10m',
+        category: 'Anime',
+        tags: ['Anime', 'Drama', 'Romance', 'Heartfelt'],
+        desc: 'A former elementary school bully seeks redemption and attempts to make amends with the deaf girl he once tormented years earlier.',
+        continuePct: 65
+      },
+      {
+        id: 'your-name',
+        title: 'Your Name.',
+        img: 'images/your-name.jpg',
+        year: 2016,
+        rating: 'U/A 13+',
+        match: 98,
+        duration: '1h 52m',
+        category: 'Anime',
+        tags: ['Anime', 'Romance', 'Fantasy', 'Masterpiece'],
+        desc: 'Two teenagers separated by distance and destiny mysteriously begin swapping bodies, embarking on an unforgettable journey across time.',
+        continuePct: 40
+      },
+      {
+        id: 'weathering-with-you',
+        title: 'Weathering With You',
+        img: 'images/weathering-with-you.jpg',
+        year: 2019,
+        rating: 'U/A 13+',
+        match: 97,
+        duration: '1h 54m',
+        category: 'Anime',
+        tags: ['Anime', 'Fantasy', 'Romance', 'Drama'],
+        desc: 'During an endlessly rainy Tokyo summer, a runaway boy crosses paths with an orphaned girl who possesses the wondrous power to stop the rain.',
+        continuePct: 82
+      },
+      {
+        id: 'garden-of-words',
+        title: 'The Garden of Words',
+        img: 'images/garden-of-words.jpg',
+        year: 2013,
+        rating: 'U/A 13+',
+        match: 95,
+        duration: '46m',
+        category: 'Romance',
+        tags: ['Anime', 'Romance', 'Visual Poetry'],
+        desc: 'On rainy mornings in a quiet Tokyo garden, an aspiring young shoemaker and a troubled older woman form an unspoken bond.',
+        continuePct: 15
+      },
+      {
+        id: 'josee-tiger-fish',
+        title: 'Josee, the Tiger and the Fish',
+        img: 'images/josee-tiger-fish.jpg',
+        year: 2020,
+        rating: 'U/A 13+',
+        match: 96,
+        duration: '1h 38m',
+        category: 'Romance',
+        tags: ['Anime', 'Inspiring', 'Romance'],
+        desc: 'A passionate university marine biology student becomes the caretaker for an imaginative paraplegic girl, opening up new horizons.',
+        continuePct: 0
+      },
+      {
+        id: 'pancreas',
+        title: 'I Want to Eat Your Pancreas',
+        img: 'images/pancreas.jpg',
+        year: 2018,
+        rating: 'U/A 13+',
+        match: 96,
+        duration: '1h 48m',
+        category: 'Drama',
+        tags: ['Anime', 'Tearjerker', 'Romance'],
+        desc: 'An introverted high school boy discovers the secret diary of his vivacious classmate and learns she is silently living with a fatal pancreatic illness.',
+        continuePct: 0
+      },
+      {
+        id: 'grave-of-fireflies',
+        title: 'Grave of the Fireflies',
+        img: 'images/grave-of-the-fireflies.jpg',
+        year: 1988,
+        rating: '16+',
+        match: 99,
+        duration: '1h 29m',
+        category: 'Anime',
+        tags: ['Studio Ghibli', 'War', 'Tragedy', 'Classic'],
+        desc: 'In the closing months of World War II, two orphaned siblings fight desperately for survival against starvation in wartime Japan.',
+        continuePct: 0
+      },
+      {
+        id: 'spirited-away',
+        title: 'Spirited Away',
+        img: 'images/spirited-away.jpg',
+        year: 2001,
+        rating: 'U',
+        match: 99,
+        duration: '2h 5m',
+        category: 'Anime',
+        tags: ['Studio Ghibli', 'Oscar Winner', 'Adventure'],
+        desc: 'Ten-year-old Chihiro wanders into a secret spirit world ruled by witches and spirits, and must work in an otherworldly bathhouse to rescue her parents.',
+        continuePct: 0
+      },
+      {
+        id: 'suzume',
+        title: 'Suzume',
+        img: 'images/suzume.jpg',
+        year: 2022,
+        rating: 'U/A 13+',
+        match: 97,
+        duration: '2h 2m',
+        category: 'Anime',
+        tags: ['Anime', 'Adventure', 'Fantasy'],
+        desc: 'A courageous 17-year-old girl and an enigmatic young traveler journey across abandoned ruins in Japan to seal mystical doors.',
+        continuePct: 0
+      },
+      {
+        id: 'anohana',
+        title: 'Anohana: The Flower We Saw That Day',
+        img: 'images/anohana.jpg',
+        year: 2013,
+        rating: 'U/A 13+',
+        match: 95,
+        duration: '1h 39m',
+        category: 'Drama',
+        tags: ['Anime', 'Drama', 'Nostalgia', 'Friendship'],
+        desc: 'Years after a childhood tragedy shattered their circle, the spirit of Menma appears to Jinta to fulfill an unremembered promise.',
+        continuePct: 0
+      }
+    ];
+
+    /* ─── 2. USER AUTH & PROFILE STATE ────────────────────── */
+    let currentUser = null;
+    try {
+      const stored = localStorage.getItem('nextflix_user');
+      if (stored) currentUser = JSON.parse(stored);
+    } catch (e) {
+      console.warn('Could not read user state', e);
+    }
+
+    const defaultProfiles = [
+      { id: 'me', name: currentUser ? currentUser.username : 'Me', initial: currentUser ? currentUser.username[0].toUpperCase() : 'M', tone: 'sunset' },
+      { id: 'guest', name: 'Guest', initial: 'G', tone: 'ocean' },
+      { id: 'teens', name: 'Teens', initial: 'T', tone: 'violet' },
+      { id: 'kids', name: 'Kids', initial: 'K', tone: 'mint' }
+    ];
+
+    let profiles = defaultProfiles;
+    try {
+      const savedProfiles = localStorage.getItem('nextflix_profiles');
+      if (savedProfiles) profiles = JSON.parse(savedProfiles);
+    } catch (e) {}
+
+    let activeProfileId = localStorage.getItem('nextflix_active_profile') || 'me';
+    let currentProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
+
+    // Update Nav Avatar & user display
+    function updateNavProfileDisplay() {
+      const navAvatar = document.getElementById('navAvatar');
+      const userNameEl = document.getElementById('dropdownUserName');
+      const userEmailEl = document.getElementById('dropdownUserEmail');
+      
+      if (navAvatar && currentProfile) {
+        navAvatar.textContent = currentProfile.initial || currentProfile.name[0].toUpperCase();
+      }
+      if (userNameEl) {
+        userNameEl.textContent = currentProfile.name;
+      }
+      if (userEmailEl) {
+        userEmailEl.textContent = currentUser ? currentUser.account : 'Signed In';
+      }
+    }
+    updateNavProfileDisplay();
+
+    // My List storage
+    let myListIds = [];
+    try {
+      const savedList = localStorage.getItem(`nextflix_mylist_${activeProfileId}`);
+      myListIds = savedList ? JSON.parse(savedList) : ['silent-voice', 'your-name'];
+    } catch (e) {
+      myListIds = ['silent-voice', 'your-name'];
+    }
+
+    function saveMyList() {
+      try {
+        localStorage.setItem(`nextflix_mylist_${activeProfileId}`, JSON.stringify(myListIds));
+      } catch (e) {}
+    }
+
+    function toggleMyList(id) {
+      const idx = myListIds.indexOf(id);
+      if (idx > -1) {
+        myListIds.splice(idx, 1);
+      } else {
+        myListIds.push(id);
+      }
+      saveMyList();
+      renderAllRows();
+    }
+
+    /* ─── 3. RENDERING CONTENT CARDS & ROWS ───────────────── */
+    function createCardHtml(movie, isTop10 = false, rank = 0, isContinue = false) {
+      const inList = myListIds.includes(movie.id);
+      const tagsStr = movie.tags.map(t => `<span>${t}</span>`).join('');
+      const progressHtml = isContinue && movie.continuePct > 0 
+        ? `<div class="card-progress-bar" style="width: ${movie.continuePct}%;"></div>` 
+        : '';
+      const removeBtnHtml = isContinue 
+        ? `<button class="btn-remove-progress" data-remove="${movie.id}">Remove</button>` 
+        : '';
+
+      const cardBody = `
+        <div class="card-media">
+          <img src="${movie.img}" alt="${movie.title}" loading="lazy" />
+          ${progressHtml}
+          <div class="card-media-title">${movie.title}</div>
+        </div>
+        <div class="card-hover-panel">
+          <div class="card-actions-row">
+            <button class="card-icon-btn btn-play-quick" data-play="${movie.id}" title="Play">▶</button>
+            <button class="card-icon-btn" data-list="${movie.id}" title="${inList ? 'Remove from My List' : 'Add to My List'}">${inList ? '✓' : '+'}</button>
+            <button class="card-icon-btn btn-more-quick" data-more="${movie.id}" title="More info">⌄</button>
+          </div>
+          <div class="card-meta-row">
+            <span class="card-match">${movie.match}% Match</span>
+            <span class="card-maturity">${movie.rating}</span>
+            <span>${movie.duration}</span>
+          </div>
+          <div class="card-tags-row">${tagsStr}</div>
+          ${removeBtnHtml}
+        </div>
+      `;
+
+      if (isTop10) {
+        return `
+          <div class="content-card" data-id="${movie.id}">
+            <div class="top10-rank-num">${rank}</div>
+            <div class="top10-card-inner">${cardBody}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="content-card" data-id="${movie.id}">
+          ${cardBody}
+        </div>
+      `;
+    }
+
+    function renderAllRows() {
+      // 1. Continue Watching
+      const continueTrack = document.getElementById('trackContinue');
+      const continueRow = document.getElementById('rowContinue');
+      const continueList = MOVIES_DATA.filter(m => m.continuePct > 0);
+      if (continueTrack) {
+        if (continueList.length > 0) {
+          continueTrack.innerHTML = continueList.map(m => createCardHtml(m, false, 0, true)).join('');
+          continueRow.style.display = 'block';
+        } else {
+          continueRow.style.display = 'none';
+        }
+      }
+
+      // 2. Top 10
+      const top10Track = document.getElementById('trackTop10');
+      if (top10Track) {
+        top10Track.innerHTML = MOVIES_DATA.slice(0, 10).map((m, i) => createCardHtml(m, true, i + 1)).join('');
+      }
+
+      // 3. Trending Now
+      const trendingTrack = document.getElementById('trackTrending');
+      if (trendingTrack) {
+        const trendingList = [...MOVIES_DATA].reverse();
+        trendingTrack.innerHTML = trendingList.map(m => createCardHtml(m)).join('');
+      }
+
+      // 4. Anime Masterpieces
+      const animeTrack = document.getElementById('trackAnime');
+      if (animeTrack) {
+        const animeList = MOVIES_DATA.filter(m => m.category === 'Anime');
+        animeTrack.innerHTML = animeList.map(m => createCardHtml(m)).join('');
+      }
+
+      // 5. Romance & Drama
+      const romanceTrack = document.getElementById('trackRomance');
+      if (romanceTrack) {
+        const romanceList = MOVIES_DATA.filter(m => m.tags.includes('Romance') || m.category === 'Romance');
+        romanceTrack.innerHTML = romanceList.map(m => createCardHtml(m)).join('');
+      }
+
+      // 6. My List
+      const myListTrack = document.getElementById('trackMyList');
+      const myListRow = document.getElementById('rowMyList');
+      if (myListTrack) {
+        const savedMovies = MOVIES_DATA.filter(m => myListIds.includes(m.id));
+        if (savedMovies.length > 0) {
+          myListTrack.innerHTML = savedMovies.map(m => createCardHtml(m)).join('');
+          myListRow.style.display = 'block';
+        } else {
+          myListTrack.innerHTML = '<p style="color:#888;padding:1rem 0;">No titles in your list yet. Hit + on any title to add it.</p>';
+          myListRow.style.display = 'block';
+        }
+      }
+    }
+
+    renderAllRows();
+
+    /* ─── 4. CAROUSEL HORIZONTAL SCROLL ARROWS ────────────── */
+    document.querySelectorAll('.carousel-viewport-wrap').forEach(wrap => {
+      const track = wrap.querySelector('.carousel-row-track');
+      const leftBtn = wrap.querySelector('.arrow-left');
+      const rightBtn = wrap.querySelector('.arrow-right');
+      if (!track || !leftBtn || !rightBtn) return;
+
+      leftBtn.addEventListener('click', () => {
+        const scrollAmount = track.clientWidth * 0.75;
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      rightBtn.addEventListener('click', () => {
+        const scrollAmount = track.clientWidth * 0.75;
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+    });
+
+    /* ─── 5. VIDEO PLAYER MODAL LOGIC ─────────────────────── */
+    const videoModal = document.getElementById('videoModal');
+    const playerVideo = document.getElementById('playerVideo');
+    const playerCloseBtn = document.getElementById('playerCloseBtn');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerSynopsis = document.getElementById('playerSynopsis');
+    const playerMatch = document.getElementById('playerMatch');
+    const playerYear = document.getElementById('playerYear');
+    const playerRating = document.getElementById('playerRating');
+    const playerDuration = document.getElementById('playerDuration');
+    const playerListToggleBtn = document.getElementById('playerListToggleBtn');
+    const heroPlayBtn = document.getElementById('heroPlayBtn');
+    const heroInfoBtn = document.getElementById('heroInfoBtn');
+    let currentlyPlayingMovie = null;
+
+    function openPlayer(movieKey) {
+      const movie = MOVIES_DATA.find(m => m.id === movieKey) || MOVIES_DATA[0];
+      if (!movie) return;
+      currentlyPlayingMovie = movie;
+
+      playerTitle.textContent = movie.title;
+      playerSynopsis.textContent = movie.desc;
+      playerMatch.textContent = `${movie.match}% Match`;
+      playerYear.textContent = movie.year;
+      playerRating.textContent = movie.rating;
+      playerDuration.textContent = movie.duration;
+
+      const inList = myListIds.includes(movie.id);
+      playerListToggleBtn.textContent = inList ? '✓' : '+';
+      playerListToggleBtn.title = inList ? 'Remove from My List' : 'Add to My List';
+
+      videoModal.classList.add('open');
+      videoModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      playerVideo.currentTime = 0;
+      playerVideo.play().catch(e => console.warn('Autoplay prevented', e));
+    }
+
+    function closePlayer() {
+      videoModal.classList.remove('open');
+      videoModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      playerVideo.pause();
+    }
+
+    if (playerCloseBtn) playerCloseBtn.addEventListener('click', closePlayer);
+    if (heroPlayBtn) heroPlayBtn.addEventListener('click', () => openPlayer('silent-voice'));
+    if (heroInfoBtn) heroInfoBtn.addEventListener('click', () => openPlayer('silent-voice'));
+
+    // Skip tools
+    const skipBackBtn = document.getElementById('playerSkipBack');
+    const skipFwdBtn = document.getElementById('playerSkipForward');
+    const speedSelect = document.getElementById('playerSpeedSelect');
+
+    if (skipBackBtn) skipBackBtn.addEventListener('click', () => { playerVideo.currentTime = Math.max(0, playerVideo.currentTime - 15); });
+    if (skipFwdBtn) skipFwdBtn.addEventListener('click', () => { playerVideo.currentTime = playerVideo.currentTime + 15; });
+    if (speedSelect) speedSelect.addEventListener('change', (e) => { playerVideo.playbackRate = parseFloat(e.target.value); });
+    if (playerListToggleBtn) {
+      playerListToggleBtn.addEventListener('click', () => {
+        if (currentlyPlayingMovie) {
+          toggleMyList(currentlyPlayingMovie.id);
+          const inList = myListIds.includes(currentlyPlayingMovie.id);
+          playerListToggleBtn.textContent = inList ? '✓' : '+';
+        }
+      });
+    }
+
+    // Modal click outside & Escape
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) closePlayer();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && videoModal.classList.contains('open')) closePlayer();
+    });
+
+    // Content cards click delegation
+    document.getElementById('browseContent').addEventListener('click', (e) => {
+      // Play button
+      const playBtn = e.target.closest('[data-play]');
+      if (playBtn) {
+        e.stopPropagation();
+        openPlayer(playBtn.getAttribute('data-play'));
+        return;
+      }
+
+      // My list toggle
+      const listBtn = e.target.closest('[data-list]');
+      if (listBtn) {
+        e.stopPropagation();
+        toggleMyList(listBtn.getAttribute('data-list'));
+        return;
+      }
+
+      // More info button
+      const moreBtn = e.target.closest('[data-more]');
+      if (moreBtn) {
+        e.stopPropagation();
+        openPlayer(moreBtn.getAttribute('data-more'));
+        return;
+      }
+
+      // Remove from continue
+      const removeBtn = e.target.closest('[data-remove]');
+      if (removeBtn) {
+        e.stopPropagation();
+        const removeId = removeBtn.getAttribute('data-remove');
+        const item = MOVIES_DATA.find(m => m.id === removeId);
+        if (item) item.continuePct = 0;
+        renderAllRows();
+        return;
+      }
+
+      // Card click
+      const card = e.target.closest('.content-card');
+      if (card) {
+        const id = card.getAttribute('data-id');
+        if (id) openPlayer(id);
+      }
+    });
+
+    /* ─── 6. HERO MUTE TOGGLE ─────────────────────────────── */
+    const heroVideo = document.getElementById('heroVideo');
+    const heroMuteBtn = document.getElementById('heroMuteBtn');
+    const muteIcon = document.getElementById('muteIcon');
+
+    if (heroMuteBtn && heroVideo) {
+      heroMuteBtn.addEventListener('click', () => {
+        heroVideo.muted = !heroVideo.muted;
+        if (heroVideo.muted) {
+          muteIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+        } else {
+          muteIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+        }
+      });
+    }
+
+    /* ─── 7. NAVBAR SCROLL EFFECT & DROPDOWNS ──────────────── */
+    const browseNav = document.getElementById('browseNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        browseNav.classList.add('scrolled');
+      } else {
+        browseNav.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // Profile menu toggle
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    if (profileBtn && profileDropdown) {
+      profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = profileDropdown.classList.contains('open');
+        profileDropdown.classList.toggle('open', !isOpen);
+        profileBtn.setAttribute('aria-expanded', !isOpen);
+      });
+
+      document.addEventListener('click', () => {
+        profileDropdown.classList.remove('open');
+        profileBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    // Sign out button
+    const signOutBtn = document.getElementById('signOutBtn');
+    if (signOutBtn) {
+      signOutBtn.addEventListener('click', () => {
+        try {
+          localStorage.removeItem('nextflix_user');
+        } catch (e) {}
+      });
+    }
+
+    /* ─── 8. INTERACTIVE SEARCH FILTER ────────────────────── */
+    const searchToggleBtn = document.getElementById('searchToggleBtn');
+    const searchBox = document.getElementById('searchBox');
+    const searchInput = document.getElementById('searchInput');
+
+    if (searchToggleBtn && searchBox && searchInput) {
+      searchToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        searchBox.classList.toggle('open');
+        if (searchBox.classList.contains('open')) {
+          searchInput.focus();
+        }
+      });
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        document.querySelectorAll('.content-card').forEach(card => {
+          const id = card.getAttribute('data-id');
+          const movie = MOVIES_DATA.find(m => m.id === id);
+          if (!movie) return;
+          const match = movie.title.toLowerCase().includes(query) || 
+                        movie.category.toLowerCase().includes(query) || 
+                        movie.tags.some(t => t.toLowerCase().includes(query));
+          card.style.display = match ? '' : 'none';
+        });
+      });
+    }
+
+    /* ─── 9. WHO'S WATCHING OVERLAY ───────────────────────── */
+    const profilesOverlay = document.getElementById('profilesOverlay');
+    const profilesGrid = document.getElementById('profilesGrid');
+    const switchProfileBtn = document.getElementById('switchProfileBtn');
+    const closeProfilesBtn = document.getElementById('closeProfilesBtn');
+
+    function renderProfilesGrid() {
+      if (!profilesGrid) return;
+      profilesGrid.innerHTML = profiles.map(p => `
+        <div class="profile-item-wrap">
+          <button class="profile-avatar-btn" data-switch-profile="${p.id}">
+            <div class="profile-avatar-box-lg ${p.tone}">${p.initial}</div>
+            <span>${p.name}</span>
+          </button>
+        </div>
+      `).join('') + `
+        <div class="profile-item-wrap">
+          <button class="profile-avatar-btn" id="addNewProfileBtn">
+            <div class="profile-avatar-box-lg add">+</div>
+            <span>Add Profile</span>
+          </button>
+        </div>
+      `;
+
+      // Select profile
+      profilesGrid.querySelectorAll('[data-switch-profile]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pId = btn.getAttribute('data-switch-profile');
+          activeProfileId = pId;
+          currentProfile = profiles.find(p => p.id === pId) || profiles[0];
+          localStorage.setItem('nextflix_active_profile', pId);
+          updateNavProfileDisplay();
+          profilesOverlay.classList.remove('open');
+          document.body.style.overflow = '';
+          
+          // Re-load profile My List
+          try {
+            const savedList = localStorage.getItem(`nextflix_mylist_${activeProfileId}`);
+            myListIds = savedList ? JSON.parse(savedList) : [];
+          } catch (e) {}
+          renderAllRows();
+        });
+      });
+
+      // Add profile button
+      const addBtn = document.getElementById('addNewProfileBtn');
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          const name = prompt('Enter profile name:');
+          if (name && name.trim()) {
+            const clean = name.trim().slice(0, 14);
+            const newP = {
+              id: 'profile_' + Date.now(),
+              name: clean,
+              initial: clean[0].toUpperCase(),
+              tone: ['ocean', 'sunset', 'violet', 'mint'][Math.floor(Math.random() * 4)]
+            };
+            profiles.push(newP);
+            localStorage.setItem('nextflix_profiles', JSON.stringify(profiles));
+            renderProfilesGrid();
+          }
+        });
+      }
+    }
+
+    if (switchProfileBtn && profilesOverlay) {
+      switchProfileBtn.addEventListener('click', () => {
+        renderProfilesGrid();
+        profilesOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    if (closeProfilesBtn && profilesOverlay) {
+      closeProfilesBtn.addEventListener('click', () => {
+        profilesOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  </script>
+</body>
+</html>
+
