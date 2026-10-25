@@ -126,20 +126,26 @@
 
     /* Auth Screen (When logged out) */
     .admin-auth-wrap {
-      min-height: 70vh;
-      display: grid;
-      place-items: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 70px);
+      padding: 5rem 1.5rem 6rem;
+      box-sizing: border-box;
     }
 
     .admin-auth-card {
       background: var(--admin-card);
       border: 1px solid var(--admin-border);
       border-radius: 8px;
-      padding: 2.5rem 2rem;
+      padding: 2.75rem 2.25rem;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
       text-align: center;
+      margin: auto 0;
     }
 
     .admin-auth-card h1 {
@@ -599,6 +605,10 @@
       }
       .admin-main {
         padding: 1.5rem 1rem 3rem;
+      }
+      .admin-auth-wrap {
+        padding: 3.5rem 1rem 4rem;
+        min-height: auto;
       }
     }
   </style>
