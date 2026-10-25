@@ -76,11 +76,12 @@ const profileStoreKey=k=>`${k}:${activeProfile||'guest'}`;
 const prog=()=>J('prog','{}'), mylist=()=>J('mylist','[]');
 const activeAudience=()=>profiles.find(p=>p.id===activeProfile)?.audience||'For Adults';
 const activeAge=()=>activeAudience()==='For Kids'?'kids':activeAudience()==='For Teens'?'teens':'adults';
-const mediaPath=file=>'/media/'+String(file).split(/[\\/]/).map(encodeURIComponent).join('/');
-const youtubeId=url=>{try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1).split('/')[0];if(u.hostname.includes('youtube.com'))return u.searchParams.get('v')||u.pathname.match(/\/(?:shorts|embed|live)\/([^/?]+)/)?.[1]}catch{}return null};
-const isYoutube=v=>Boolean(youtubeId(v.video_url||''));
+const mediaPath=file=>{if(!file)return '';const s=String(file);if(/^https?:\/\//i.test(s)||s.startsWith('/'))return s;return '/media/'+s.split(/[\\/]/).map(encodeURIComponent).join('/')};
+const youtubeId=url=>{try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1).split('/')[0];if(u.hostname.includes('youtube.com'))return u.searchParams.get('v')||u.pathname.match(/\/(?:shorts|embed|live)\/([^/?]+)/)?.[1]||null}catch{}return null};
+const youtubePlaylistId=url=>{try{const u=new URL(url);return u.searchParams.get('list')||null}catch{}return null};
+const isYoutube=v=>Boolean(youtubeId(v.video_url||'')||youtubePlaylistId(v.video_url||''));
 const videoSource=v=>v.video_url||mediaPath(v.file);
-const poster=v=>v.poster?mediaPath(v.poster):(isYoutube(v)?`https://i.ytimg.com/vi/${encodeURIComponent(youtubeId(v.video_url))}/hqdefault.jpg`:'');
+const poster=v=>{if(v.poster)return mediaPath(v.poster);const yt=youtubeId(v.video_url||'');if(yt)return `https://i.ytimg.com/vi/${encodeURIComponent(yt)}/hqdefault.jpg`;return ''};
 const seriesList=list=>{const groups=new Map();list.forEach(v=>{const key=v.series||`__${v.id}`;if(!groups.has(key))groups.set(key,{...v,episodes:v.series?[]:null});if(v.series)groups.get(key).episodes.push(v)});return [...groups.values()].map(v=>{if(v.episodes)v.episodes.sort((a,b)=>(a.episode||999)-(b.episode||999));return v})};
 addEventListener('scroll',()=>$('#nav').classList.toggle('solid',scrollY>40));
 
@@ -413,12 +414,20 @@ function play(id,infoOnly){
   $('#episodes').innerHTML=seriesEpisodes.length?`<div class="eps">${seriesEpisodes.map((episode,index)=>`<button class="${episode.id===cur.id?'on':''}" data-episode="${episode.id}">Episode ${episode.episode||index+1}</button>`).join('')}</div>`:'';
   const lb=$('#pl'), sync=()=>lb.textContent=mylist().includes(cur.id)?'✓ In My List':'+ My List';
   sync(); lb.onclick=()=>{toggle(cur.id);sync()};
-  const yt=youtubeId(cur.video_url||'');$('#pic').style.display='none';$('#doc').style.display='none';$('#yt').style.display=yt?'block':'none';$('#tools').style.display=yt?'none':'flex';vid.style.display=yt?'none':'block';vid.muted=false;vid.src=yt?'':'/'+videoSource(cur).replace(/^\/+/,''); if(!yt)vid.src=videoSource(cur); vid.poster=poster(cur);
-  if(yt)$('#yt').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt)}?autoplay=1&controls=1&rel=0&playsinline=1`;
+  const yt=youtubeId(cur.video_url||'');
+  const ytList=youtubePlaylistId(cur.video_url||'');
+  const isYt=Boolean(yt||ytList);
+  $('#pic').style.display='none';$('#doc').style.display='none';$('#yt').style.display=isYt?'block':'none';$('#tools').style.display=isYt?'none':'flex';vid.style.display=isYt?'none':'block';vid.muted=false;
+  if(!isYt){vid.src=videoSource(cur);vid.poster=poster(cur)}
+  if(yt){
+    $('#yt').src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt)}?autoplay=1&controls=1&rel=0&playsinline=1${ytList?`&list=${encodeURIComponent(ytList)}`:''}`;
+  }else if(ytList){
+    $('#yt').src=`https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(ytList)}&autoplay=1&controls=1&rel=0&playsinline=1`;
+  }
   $('#trailer').style.display=cur.trailer_url?'inline-flex':'none';$('#trailer').href=cur.trailer_url||'#';
   const p=prog()[id]; vid.onloadedmetadata=()=>{if(p&&p.t<vid.duration-5)vid.currentTime=p.t};
   $('#modal').classList.add('on'); $('#modal').scrollTop=0;
-  if(!yt)vid.play().catch(()=>{}); fetch(`/api/videos/${id}/view`,{method:'POST'});
+  if(!isYt)vid.play().catch(()=>{}); fetch(`/api/videos/${id}/view`,{method:'POST'});
 }
 vid.ontimeupdate=()=>{if(!cur||Date.now()-last<2000)return;last=Date.now();
   const p=prog();p[cur.id]={t:vid.currentTime,d:vid.duration};localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p))};

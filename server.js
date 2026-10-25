@@ -55,6 +55,8 @@ for (const column of ['series', 'episode']) {
   }
 }
 
+try { require('./seed.js'); } catch (e) { console.warn('Database seed notice:', e.message); }
+
 const VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mkv', '.mov', '.avi', '.m4v', '.mpeg', '.mpg', '.ogv']);
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.svg']);
 const IMPORT_TYPES = {

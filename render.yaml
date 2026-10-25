@@ -12,3 +12,4 @@ services:
         value: 10000
       - key: ADMIN_PASSWORD
         value: admin123
+
