@@ -390,8 +390,14 @@ function render(){
   }
   const displayVideos=seriesList(videos), selected=videos.find(v=>v.featured)||videos[0], f=selected, pr=prog(), cont=displayVideos.filter(v=>v.episodes?v.episodes.some(e=>pr[e.id]&&pr[e.id].t>5&&pr[e.id].t<pr[e.id].d-5):pr[v.id]&&pr[v.id].t>5&&pr[v.id].t<pr[v.id].d-5);
   const cats=[...new Set(displayVideos.map(v=>v.category))], top=[...displayVideos].sort((a,b)=>b.views-a.views).slice(0,10);
+  const heroYt = youtubeId(f?.video_url || '');
+  const heroYtList = youtubePlaylistId(f?.video_url || '');
+  const heroVideoHtml = isYoutube(f) ? (
+    heroYt ? `<div class="hero-video-wrap"><iframe id="hv-yt" class="hero-yt" src="https://www.youtube.com/embed/${encodeURIComponent(heroYt)}?autoplay=1&mute=1&controls=0&loop=1&playlist=${encodeURIComponent(heroYt)}&playsinline=1&enablejsapi=1&rel=0&showinfo=0&iv_load_policy=3&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" frameborder="0"></iframe></div>` :
+    (heroYtList ? `<div class="hero-video-wrap"><iframe id="hv-yt" class="hero-yt" src="https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(heroYtList)}&autoplay=1&mute=1&controls=0&loop=1&playsinline=1&enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" frameborder="0"></iframe></div>` : '')
+  ) : (videoSource(f) ? `<video id="hv" src="${videoSource(f)}" muted loop autoplay playsinline></video>` : '');
   m.innerHTML=`<section class="hero">${poster(f)?`<div class="bg" style="background:url(${poster(f)}) center/cover"></div>`:''}
-    ${!isYoutube(f)?`<video id="hv" src="${videoSource(f)}" muted loop autoplay playsinline></video>`:''}
+    ${heroVideoHtml}
     <div class="c"><div class="badge"><b>N</b> ${esc(activeAudience()).toUpperCase()}</div><h1>${esc(f.title)}</h1><p>${esc(f.description)||'Now streaming on NEXTFLIX.'}</p>
     <div class="acts"><button class="b w" data-id="${f.id}">▶ Play</button><button class="b g" data-info="${f.id}">ⓘ More Info</button></div></div>
     <button class="mute" id="mt" aria-label="Unmute preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="m18 9 3 3-3 3"></path><path d="m21 9-3 6"></path></svg></button></section>`+
@@ -403,7 +409,26 @@ $('#main').addEventListener('click',e=>{
   if(remove){const p=prog();delete p[remove.dataset.removeProgress];localStorage.setItem(profileStoreKey('prog'),JSON.stringify(p));render();return}
   const s=e.target.closest('[data-s]');
   if(s){const t=s.parentElement.querySelector('.track');t.scrollBy({left:s.dataset.s*t.clientWidth*.9});return}
-  if(e.target.closest('#mt')){const button=e.target.closest('#mt'),v=$('#hv');v.muted=!v.muted;if(!v.muted)v.play();button.setAttribute('aria-label',v.muted?'Unmute preview':'Mute preview');button.innerHTML=v.muted?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="m18 9 3 3-3 3"></path><path d="m21 9-3 6"></path></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="M17 9.5a4 4 0 0 1 0 5"></path><path d="M19.5 7a8 8 0 0 1 0 10"></path></svg>';return}
+  if(e.target.closest('#mt')){
+    const button=e.target.closest('#mt'), v=$('#hv'), ytFrame=$('#hv-yt');
+    if(v){
+      v.muted=!v.muted;
+      if(!v.muted)v.play();
+      button.setAttribute('aria-label',v.muted?'Unmute preview':'Mute preview');
+      button.innerHTML=v.muted?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="m18 9 3 3-3 3"></path><path d="m21 9-3 6"></path></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="M17 9.5a4 4 0 0 1 0 5"></path><path d="M19.5 7a8 8 0 0 1 0 10"></path></svg>';
+    } else if(ytFrame && ytFrame.contentWindow){
+      const isMuted = button.getAttribute('data-muted') !== 'false';
+      const newMuted = !isMuted;
+      button.setAttribute('data-muted', String(newMuted));
+      ytFrame.contentWindow.postMessage(JSON.stringify({
+        event: 'command',
+        func: newMuted ? 'mute' : 'unMute'
+      }), '*');
+      button.setAttribute('aria-label', newMuted ? 'Unmute preview' : 'Mute preview');
+      button.innerHTML = newMuted ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="m18 9 3 3-3 3"></path><path d="m21 9-3 6"></path></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="M17 9.5a4 4 0 0 1 0 5"></path><path d="M19.5 7a8 8 0 0 1 0 10"></path></svg>';
+    }
+    return;
+  }
   const a=e.target.closest('[data-add]');if(a){toggle(+a.dataset.add);return}
   const i=e.target.closest('[data-info]');if(i){play(+i.dataset.info,true);return}
   const b=e.target.closest('[data-id]');if(b)play(+b.dataset.id);
