@@ -50,7 +50,16 @@ Authenticated users enter the browsing experience with spotlight hero video bann
 
 ---
 
-### 3. Admin Studio & Video Management
+### 3. Top 10 Today, My List & Card Hover Previews
+Stylized Top 10 ranked tiles with authentic Netflix numbered typography, personalized **My List** bookmark row, and an interactive **Card Hover Preview** that plays muted video snippets with quick action buttons upon hover.
+
+<p align="center">
+  <img src="screenshots/catalog-hover.png" alt="NEXTFLIX Top 10 and Card Hover Preview" width="95%" style="border-radius: 8px;" />
+</p>
+
+---
+
+### 4. Admin Studio & Video Management
 Protected studio portal with crypto-salted password security (`admin123`), enabling library curation, video file / YouTube URL ingestion, automated poster generation, and banner spotlight control.
 
 <p align="center">
@@ -122,6 +131,7 @@ nextflix/
 ├── screenshots/             # High-resolution README showcase screenshots
 │   ├── landing-page.png     # Landing hero showcase
 │   ├── browse-dashboard.png # Browse catalog & Continue Watching showcase
+│   ├── catalog-hover.png    # Top 10 badges, My List & card hover preview
 │   └── admin-studio.png     # Admin Studio portal showcase
 ├── uploads/                 # Media storage directory & uploaded posters
 ├── nextflix.db              # SQLite database (catalog, profiles, settings)
